@@ -1,0 +1,20 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  username: jira_migrate
+  password: jira_migrate
+  # For details on connection pooling, see rails configuration guide
+  # http://guides.rubyonrails.org/configuring.html#database-pooling
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+development:
+  <<: *default
+  database: jira_dev
+
+test:
+  <<: *default
+  database: jira_test
+
+production:
+  <<: *default
+  database: jira_production
