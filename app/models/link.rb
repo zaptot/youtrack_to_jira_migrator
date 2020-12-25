@@ -12,8 +12,9 @@
 #
 # Indexes
 #
-#  index_links_on_issue_from_id  (issue_from_id)
-#  index_links_on_issue_to_id    (issue_to_id)
+#  index_links_on_issue_from_id                           (issue_from_id)
+#  index_links_on_issue_to_id                             (issue_to_id)
+#  index_links_on_type_and_issue_from_id_and_issue_to_id  (type,issue_from_id,issue_to_id) UNIQUE
 #
 class Link < ApplicationRecord
   self.inheritance_column = :_type_disabled

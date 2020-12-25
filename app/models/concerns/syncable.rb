@@ -10,21 +10,26 @@ module Syncable
       state :synced
       state :failed
       state :processing
+      state :updated
+
+      event :notify_updated do
+        transitions from: %i[synced], to: :updated
+      end
 
       event :start_sync do
-        transitions from: [:new, :failed], to: :pending
+        transitions from: %i[new failed updated], to: :pending
       end
 
       event :process do
-        transitions from: [:pending], to: :processing
+        transitions from: %i[pending], to: :processing
       end
 
       event :sync do
-        transitions from: [:process], to: :synced
+        transitions from: %i[processing], to: :synced
       end
 
       event :fail do
-        transitions from: [:process], to: :failed
+        transitions from: %i[processing], to: :failed
       end
     end
   end

@@ -22,4 +22,6 @@ class JiraUser < ApplicationRecord
   end
 
   belongs_to :project, required: true
+
+  scope :for_project, ->(project) { where(project_id: project) }
 end

@@ -20,6 +20,10 @@ module Youtrack::Entities
       comment[:text]
     end
 
+    def issue_number_in_project
+      comment.dig(:issue, :numberInProject)
+    end
+
     def attachments
       @attachments ||= comment[:attachments]&.map { |attach| Attachment.new(attach) }
     end

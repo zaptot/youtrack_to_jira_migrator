@@ -1,27 +1,21 @@
 SIZE_OF_SEED = 5
 
 %w[TD LIVE].each do |project_id|
-  Project.where(id: project_id, full_name: project_id, youtrack_token: 'y_token').first_or_create
+  Project.where(id: project_id, full_name: project_id, youtrack_token: 'y_token', youtrack_url: 'y_url').first_or_create
 end
 
 Project.find_each do |project|
-  SIZE_OF_SEED.times do |i|
-    Tag.where(project_id: project.id, name: "tag#{i}").first_or_create
-  end
-
   SIZE_OF_SEED.times do |i|
     JiraUser.where(email: "user##{i}", project_id: project.id).first_or_create
   end
 
   SIZE_OF_SEED.times do |i|
     Issue.where(title: "issue##{i}",
-                 description: 'description',
-                 status: 'In Progress',
-                 type: 'Task',
-                 estimation: '22',
-                 custom_fields: { value: 'c_value', type: 'select', name: 'c_name' },
-                 jira_user_id: (rand * SIZE_OF_SEED).to_i,
-                 project_id: project.id).first_or_create
+                number_in_project: -i,
+                description: 'description',
+                custom_fields: { fields: [{ value: 'c_value', type: 'select', name: 'c_name' }] },
+                jira_user_id: (rand * SIZE_OF_SEED).to_i,
+                project_id: project.id).first_or_create
   end
 end
 

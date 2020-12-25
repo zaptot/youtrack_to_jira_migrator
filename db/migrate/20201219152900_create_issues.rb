@@ -3,12 +3,12 @@
 class CreateIssues < ActiveRecord::Migration[6.0]
   def change
     create_table :issues do |t|
-      t.string :title
-      t.text :description
-      t.string :state
-      t.string :status
-      t.string :type
-      t.string :estimation
+      t.bigint :number_in_project, null: false, index: true
+      t.string :title, null: false
+      t.text :description, null: false
+      t.string :state, null: false
+      t.string :tags, array: true, default: []
+
       t.jsonb :custom_fields, default: {}
 
       t.timestamps

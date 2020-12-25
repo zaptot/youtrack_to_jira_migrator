@@ -7,6 +7,7 @@ class CreateLinks < ActiveRecord::Migration[6.0]
       t.string :state
 
       t.timestamps
+      t.index %i[type issue_from_id issue_to_id], unique: true
     end
   end
 end

@@ -32,26 +32,26 @@ ActiveRecord::Schema.define(version: 2020_12_22_224353) do
     t.string "state"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.bigint "jira_user_id"
-    t.bigint "issue_id"
+    t.bigint "jira_user_id", null: false
+    t.bigint "issue_id", null: false
     t.index ["issue_id"], name: "index_comments_on_issue_id"
     t.index ["jira_user_id"], name: "index_comments_on_jira_user_id"
   end
 
   create_table "issues", force: :cascade do |t|
-    t.string "title"
-    t.text "description"
-    t.string "state"
-    t.string "status"
-    t.string "type"
-    t.string "estimation"
+    t.bigint "number_in_project", null: false
+    t.string "title", null: false
+    t.text "description", null: false
+    t.string "state", null: false
+    t.string "tags", default: [], array: true
     t.jsonb "custom_fields", default: {}
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.bigint "jira_user_id"
+    t.bigint "jira_user_id", null: false
     t.string "project_id"
     t.index ["jira_user_id"], name: "index_issues_on_jira_user_id"
-    t.index ["project_id", "id"], name: "index_issues_on_project_id_and_id", unique: true
+    t.index ["number_in_project"], name: "index_issues_on_number_in_project"
+    t.index ["project_id", "number_in_project"], name: "index_issues_on_project_id_and_number_in_project", unique: true
   end
 
   create_table "jira_users", force: :cascade do |t|
@@ -72,22 +72,16 @@ ActiveRecord::Schema.define(version: 2020_12_22_224353) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["issue_from_id"], name: "index_links_on_issue_from_id"
     t.index ["issue_to_id"], name: "index_links_on_issue_to_id"
+    t.index ["type", "issue_from_id", "issue_to_id"], name: "index_links_on_type_and_issue_from_id_and_issue_to_id", unique: true
   end
 
   create_table "projects", id: :string, force: :cascade do |t|
     t.string "full_name", null: false
     t.string "youtrack_token", null: false
+    t.string "youtrack_url", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["id"], name: "index_projects_on_id"
-  end
-
-  create_table "tags", force: :cascade do |t|
-    t.string "project_id"
-    t.string "name"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["project_id", "name"], name: "index_tags_on_project_id_and_name", unique: true
   end
 
 end

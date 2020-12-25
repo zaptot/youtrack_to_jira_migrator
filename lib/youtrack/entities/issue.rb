@@ -29,15 +29,15 @@ module Youtrack::Entities
     end
 
     def tags
-      attrs[:tags]&.map { |tag| tag[:name] }
+      attrs[:tags].map { |tag| tag[:name] }
     end
 
     def attachments
-      @attachments ||= attrs[:attachments]&.map { |attach| Attachment.new(attach) }
+      @attachments ||= attrs[:attachments].map { |attach| Attachment.new(attach) }
     end
 
     def links
-      @links ||= attrs[:links].select { |link_type| link_type[:issues].any? }.map { |link| Link.new(link) }
+      @links ||= attrs[:links].select { |link_type| link_type[:issues].any? }.map { |link| Link.new(link, id) }
     end
 
     def comments
@@ -54,6 +54,13 @@ module Youtrack::Entities
 
     def custom_fields
       @custom_fields ||= attrs[:customFields].map { |field| field[:name].downcase.to_sym }
+    end
+
+    def json_custom_fields
+      custom_fields.map do |field|
+        custom_field = try(field)
+        { type: custom_field.type, value: custom_field.value, field_name: custom_field.field_name }
+      end
     end
 
     def respond_to_missing?(method_name, *args)

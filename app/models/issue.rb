@@ -2,23 +2,23 @@
 #
 # Table name: issues
 #
-#  id            :bigint           not null, primary key
-#  title         :string
-#  description   :text
-#  state         :string
-#  status        :string
-#  type          :string
-#  estimation    :string
-#  custom_fields :jsonb
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  jira_user_id  :bigint
-#  project_id    :string
+#  id                :bigint           not null, primary key
+#  number_in_project :bigint           not null
+#  title             :string           not null
+#  description       :text             not null
+#  state             :string           not null
+#  tags              :string           default([]), is an Array
+#  custom_fields     :jsonb
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  jira_user_id      :bigint           not null
+#  project_id        :string
 #
 # Indexes
 #
-#  index_issues_on_jira_user_id       (jira_user_id)
-#  index_issues_on_project_id_and_id  (project_id,id) UNIQUE
+#  index_issues_on_jira_user_id                      (jira_user_id)
+#  index_issues_on_number_in_project                 (number_in_project)
+#  index_issues_on_project_id_and_number_in_project  (project_id,number_in_project) UNIQUE
 #
 class Issue < ApplicationRecord
   self.inheritance_column = :_type_disabled
@@ -35,4 +35,6 @@ class Issue < ApplicationRecord
     has_many :attachments, as: :reference
     has_many :comments
   end
+
+  scope :for_project, ->(project_id) { where(project_id: project_id) }
 end

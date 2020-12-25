@@ -7,8 +7,8 @@
 #  state        :string
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
-#  jira_user_id :bigint
-#  issue_id     :bigint
+#  jira_user_id :bigint           not null
+#  issue_id     :bigint           not null
 #
 # Indexes
 #
