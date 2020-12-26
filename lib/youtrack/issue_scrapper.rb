@@ -20,7 +20,7 @@ module Youtrack
         comments(text,author(email),deleted,created,issue(numberInProject))
       ].join(',')
     }.freeze
-    PAGINATE_SIZE = 500
+    PAGINATE_SIZE = 1
 
     class << self
       def get_all_issues_by_project(client, project_id)
@@ -28,7 +28,7 @@ module Youtrack
           response = JSON(client.get([ISSUES_API_PATH], params: request_params(project_id, page)).body_str)
           issues << response
 
-          break issues.flatten if response.size < PAGINATE_SIZE
+          break issues.flatten # if response.size < PAGINATE_SIZE
         end
       end
 

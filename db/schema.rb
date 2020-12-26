@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_22_224353) do
+ActiveRecord::Schema.define(version: 2020_12_26_194429) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,9 +23,11 @@ ActiveRecord::Schema.define(version: 2020_12_22_224353) do
     t.string "state"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "project_id"
     t.index ["comment_id"], name: "index_attachments_on_comment_id"
-    t.index ["issue_id", "url"], name: "index_attachments_on_issue_id_and_url", unique: true
+    t.index ["issue_id", "name"], name: "index_attachments_on_issue_id_and_name", unique: true
     t.index ["issue_id"], name: "index_attachments_on_issue_id"
+    t.index ["project_id"], name: "index_attachments_on_project_id"
     t.index ["url"], name: "index_attachments_on_url"
   end
 
@@ -35,9 +37,11 @@ ActiveRecord::Schema.define(version: 2020_12_22_224353) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "jira_user_id", null: false
+    t.string "project_id"
     t.bigint "issue_id", null: false
     t.index ["issue_id"], name: "index_comments_on_issue_id"
     t.index ["jira_user_id"], name: "index_comments_on_jira_user_id"
+    t.index ["project_id"], name: "index_comments_on_project_id"
   end
 
   create_table "issues", force: :cascade do |t|
@@ -72,8 +76,10 @@ ActiveRecord::Schema.define(version: 2020_12_22_224353) do
     t.string "state"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "project_id"
     t.index ["issue_from_id"], name: "index_links_on_issue_from_id"
     t.index ["issue_to_id"], name: "index_links_on_issue_to_id"
+    t.index ["project_id"], name: "index_links_on_project_id"
     t.index ["type", "issue_from_id", "issue_to_id"], name: "index_links_on_type_and_issue_from_id_and_issue_to_id", unique: true
   end
 

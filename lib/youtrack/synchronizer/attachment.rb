@@ -10,6 +10,8 @@ module Youtrack::Synchronizer::Attachment
         issue_id: issues(project_id)[attachment.issue_number_in_project].id,
         name: attachment.name,
         url: attachment.url,
+        project_id: project_id,
+        state: :new,
         created_at: Time.now,
         updated_at: Time.now
       }
@@ -17,7 +19,7 @@ module Youtrack::Synchronizer::Attachment
 
     return if data_to_insert.blank?
 
-    Attachment.insert_all(data_to_insert, unique_by: %i[issue_id url])
+    Attachment.insert_all(data_to_insert, unique_by: %i[issue_id name])
   end
 
   def find_attachment_comment(project, attachment)

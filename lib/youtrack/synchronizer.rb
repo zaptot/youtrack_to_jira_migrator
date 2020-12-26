@@ -17,6 +17,7 @@ module Youtrack
       sync_comments(data_to_sync[:comments])
       sync_links(data_to_sync[:links])
       sync_attachments(data_to_sync[:attachments])
+      download_attachments
     end
 
     private
@@ -52,6 +53,10 @@ module Youtrack
 
     def sync_links(links)
       Synchronizer::Link.sync(id, links)
+    end
+
+    def download_attachments
+      Synchronizer::ImageDownloader.download_attachments(id)
     end
   end
 end

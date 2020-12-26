@@ -11,7 +11,8 @@ module Youtrack::Synchronizer::Comment
         created_at: comment.created_at || Time.now,
         updated_at: Time.now,
         issue_id: issues(project_id)[comment.issue_number_in_project].id,
-        jira_user_id: users(project_id)[comment.author_email].id
+        jira_user_id: users(project_id)[comment.author_email].id,
+        project_id: project_id
       }
     end
 

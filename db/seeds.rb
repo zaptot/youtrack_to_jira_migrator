@@ -23,13 +23,15 @@ Issue.find_each do |issue|
   SIZE_OF_SEED.times do |i|
     Comment.where(body: "body#{i}",
                   jira_user: issue.project.jira_users[(rand * SIZE_OF_SEED).to_i],
-                  issue: issue).first_or_create!
+                  issue: issue,
+                  project_id: issue.project.id).first_or_create!
   end
 
   SIZE_OF_SEED.times do |i|
     Link.where(type: "type#{i}",
                issue_from: issue,
-               issue_to: issue.project.issues[issue.id.next % SIZE_OF_SEED]).first_or_create!
+               issue_to: issue.project.issues[issue.id.next % SIZE_OF_SEED],
+               project_id: issue.project.id).first_or_create!
   end
 end
 
@@ -37,6 +39,7 @@ Issue.find_each do |issue|
   SIZE_OF_SEED.times do |i|
     Attachment.where(issue: issue,
                      url: "attachment_url#{i}_#{issue.id}",
-                     name: "attachment#{i}").first_or_create!
+                     name: "attachment#{i}",
+                     project_id: issue.project.id).first_or_create!
   end
 end

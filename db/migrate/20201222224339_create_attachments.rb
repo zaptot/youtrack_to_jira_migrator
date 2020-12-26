@@ -9,7 +9,7 @@ class CreateAttachments < ActiveRecord::Migration[6.0]
 
       t.timestamps
 
-      t.index %i[issue_id url], unique: true
+      t.index %i[issue_id name], unique: true
     end
   end
 end

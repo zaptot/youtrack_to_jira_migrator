@@ -81,6 +81,8 @@ GEM
     concurrent-ruby (1.1.7)
     crass (1.0.6)
     curb (0.9.10)
+    down (5.2.0)
+      addressable (~> 2.5)
     erubi (1.10.0)
     ffi (1.13.1)
     globalid (0.4.2)
@@ -214,6 +216,7 @@ DEPENDENCIES
   byebug
   capybara (>= 2.15)
   curb
+  down
   jbuilder (~> 2.7)
   listen (~> 3.2)
   pg
