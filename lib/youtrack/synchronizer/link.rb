@@ -23,6 +23,7 @@ module Youtrack::Synchronizer::Link
     end
 
     return if data_to_insert.blank?
+
     Link.insert_all(data_to_insert, unique_by: %i[type issue_from_id issue_to_id])
   end
 

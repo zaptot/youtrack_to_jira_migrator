@@ -9,6 +9,7 @@ module Youtrack::Synchronizer::User
     end
 
     return if data_to_insert.blank?
+
     JiraUser.insert_all(data_to_insert, unique_by: [:project_id, :email])
   end
 end

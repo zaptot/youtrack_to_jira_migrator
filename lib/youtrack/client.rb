@@ -10,6 +10,7 @@ module Youtrack
     end
 
     def get(path, params: nil)
+      Rails.logger.info("YOUTRACK CLIENT REQUEST: #{params}")
       curl = Curl::Easy.new(generate_url(path, params).to_s)
       curl.headers = headers
       curl.perform

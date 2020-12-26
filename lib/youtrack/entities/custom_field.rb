@@ -11,7 +11,7 @@ module Youtrack::Entities
     def value
       if attrs.dig(:value).is_a?(Array)
         attrs.dig(:value).map { |value| value&.values_at(:email, :minutes, :name)&.compact&.first }
-      elsif attrs.dig(:value).is_a?(String) || attrs.dig(:value).blank?
+      elsif attrs.dig(:value).is_a?(String) || attrs.dig(:value).blank? || attrs.dig(:value).is_a?(Integer)
         attrs.dig(:value)
       elsif attrs.dig(:value).is_a?(Hash)
         attrs.dig(:value)&.values_at(:email, :minutes, :name)&.compact&.first

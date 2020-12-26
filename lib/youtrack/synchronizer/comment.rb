@@ -8,7 +8,7 @@ module Youtrack::Synchronizer::Comment
       {
         body: comment.body,
         state: :new,
-        created_at: Time.now,
+        created_at: comment.created_at || Time.now,
         updated_at: Time.now,
         issue_id: issues(project_id)[comment.issue_number_in_project].id,
         jira_user_id: users(project_id)[comment.author_email].id
@@ -16,6 +16,7 @@ module Youtrack::Synchronizer::Comment
     end
 
     return if data_to_insert.blank?
+
     Comment.insert_all(data_to_insert)
   end
 

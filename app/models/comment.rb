@@ -20,5 +20,5 @@ class Comment < ApplicationRecord
 
   belongs_to :jira_user
   belongs_to :issue
-  has_many :attachments, as: :reference, dependent: :destroy
+  has_many :attachments, dependent: :destroy
 end

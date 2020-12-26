@@ -13,7 +13,7 @@ module Youtrack::Entities
     end
 
     def created_at
-      comment[:created]
+      Time.at(comment[:created].to_i / 1000)
     end
 
     def body
@@ -22,10 +22,6 @@ module Youtrack::Entities
 
     def issue_number_in_project
       comment.dig(:issue, :numberInProject)
-    end
-
-    def attachments
-      @attachments ||= comment[:attachments]&.map { |attach| Attachment.new(attach) }
     end
   end
 end

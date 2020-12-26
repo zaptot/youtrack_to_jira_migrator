@@ -14,12 +14,13 @@ module Youtrack::Synchronizer::Issue
         project_id: project_id,
         state: :new,
         tags: issue.tags,
-        created_at: Time.now,
+        created_at: issue.created_at || Time.now,
         updated_at: Time.now
       }
     end
 
     return if data_to_insert.blank?
+
     Issue.insert_all(data_to_insert, unique_by: [:project_id, :number_in_project])
   end
 

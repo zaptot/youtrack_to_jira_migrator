@@ -20,6 +20,10 @@ module Youtrack::Entities
       attrs[:numberInProject]
     end
 
+    def created_at
+      Time.at(attrs[:created].to_i / 1000)
+    end
+
     def project_id
       attrs.dig(:project, :shortName)
     end

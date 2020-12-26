@@ -5,7 +5,7 @@
 #  id                :bigint           not null, primary key
 #  number_in_project :bigint           not null
 #  title             :string           not null
-#  description       :text             not null
+#  description       :text
 #  state             :string           not null
 #  tags              :string           default([]), is an Array
 #  custom_fields     :jsonb
@@ -32,7 +32,7 @@ class Issue < ApplicationRecord
 
   with_options dependent: :destroy do
     has_many :links, foreign_key: :issue_from_id
-    has_many :attachments, as: :reference
+    has_many :attachments
     has_many :comments
   end
 

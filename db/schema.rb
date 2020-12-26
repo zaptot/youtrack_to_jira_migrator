@@ -16,14 +16,16 @@ ActiveRecord::Schema.define(version: 2020_12_22_224353) do
   enable_extension "plpgsql"
 
   create_table "attachments", force: :cascade do |t|
-    t.string "reference_type"
-    t.bigint "reference_id"
+    t.bigint "comment_id"
+    t.bigint "issue_id"
     t.string "url"
     t.string "name"
     t.string "state"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["reference_type", "reference_id"], name: "index_attachments_on_reference_type_and_reference_id"
+    t.index ["comment_id"], name: "index_attachments_on_comment_id"
+    t.index ["issue_id", "url"], name: "index_attachments_on_issue_id_and_url", unique: true
+    t.index ["issue_id"], name: "index_attachments_on_issue_id"
     t.index ["url"], name: "index_attachments_on_url"
   end
 
@@ -41,7 +43,7 @@ ActiveRecord::Schema.define(version: 2020_12_22_224353) do
   create_table "issues", force: :cascade do |t|
     t.bigint "number_in_project", null: false
     t.string "title", null: false
-    t.text "description", null: false
+    t.text "description"
     t.string "state", null: false
     t.string "tags", default: [], array: true
     t.jsonb "custom_fields", default: {}

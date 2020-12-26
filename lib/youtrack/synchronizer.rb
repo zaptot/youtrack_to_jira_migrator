@@ -12,7 +12,6 @@ module Youtrack
     end
 
     def sync
-      binding.pry
       sync_users(data_to_sync[:users])
       sync_issues(data_to_sync[:issues])
       sync_comments(data_to_sync[:comments])
@@ -31,6 +30,7 @@ module Youtrack
         memo[:links] += issue.links
         memo[:users] += [issue.author_email, issue.assignee.value].compact +
                          issue.comments.map { |comment| comment.author_email }
+        memo[:attachments] += issue.attachments
       end
     end
 
@@ -47,8 +47,7 @@ module Youtrack
     end
 
     def sync_attachments(attachments)
-      # TODO: later
-      false
+      Synchronizer::Attachment.sync(id, attachments)
     end
 
     def sync_links(links)

@@ -15,5 +15,13 @@ module Youtrack::Entities
     def name
       attrs[:name]
     end
+
+    def comment
+      Comment.new(attrs[:comment]) if attrs[:comment].present?
+    end
+
+    def issue_number_in_project
+      attrs.dig(:issue, :numberInProject)
+    end
   end
 end
