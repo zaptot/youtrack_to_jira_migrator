@@ -25,7 +25,7 @@ module Youtrack::Synchronizer::Attachment
   def find_attachment_comment(project, attachment)
     return if attachment.comment.blank?
 
-    Comment.find_by(jira_user: users(project)[attachment.comment.author_email],
+    Comment.find_by(jira_user: users(project)[attachment.comment.author.email],
                     issue: issues(project)[attachment.issue_number_in_project],
                     body: attachment.comment.body)
   end

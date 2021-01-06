@@ -16,6 +16,7 @@
 #  index_comments_on_issue_id      (issue_id)
 #  index_comments_on_jira_user_id  (jira_user_id)
 #  index_comments_on_project_id    (project_id)
+#  uniq_comments_index             (project_id,issue_id,jira_user_id,created_at) UNIQUE
 #
 class Comment < ApplicationRecord
   include Syncable

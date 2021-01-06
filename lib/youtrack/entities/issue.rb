@@ -28,8 +28,8 @@ module Youtrack::Entities
       attrs.dig(:project, :shortName)
     end
 
-    def author_email
-      attrs.dig(:reporter, :email)
+    def author
+      User.new(attrs[:reporter])
     end
 
     def tags

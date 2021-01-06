@@ -5,7 +5,14 @@ module Youtrack::Synchronizer::User
 
   def sync(project_id, users)
     data_to_insert = users.map do |user|
-      { email: user, project_id: project_id, state: :new, created_at: Time.now, updated_at: Time.now }
+      {
+        email: user.email,
+        full_name: user.full_name,
+        project_id: project_id,
+        state: :new,
+        created_at: Time.now,
+        updated_at: Time.now
+      }
     end
 
     return if data_to_insert.blank?

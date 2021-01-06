@@ -4,7 +4,7 @@ module Youtrack::Synchronizer::ImageDownloader
   module_function
 
   def download_attachments(project_id)
-    Attachment.for_project(project_id).not_downloaded.find_each do |attachment|
+    Attachment.preload(:issue).for_project(project_id).not_downloaded.find_each do |attachment|
       Down.download(image_url(project_id, attachment.url), destination: save_path(attachment))
 
       attachment.download!

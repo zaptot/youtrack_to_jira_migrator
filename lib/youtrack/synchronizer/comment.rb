@@ -11,14 +11,14 @@ module Youtrack::Synchronizer::Comment
         created_at: comment.created_at || Time.now,
         updated_at: Time.now,
         issue_id: issues(project_id)[comment.issue_number_in_project].id,
-        jira_user_id: users(project_id)[comment.author_email].id,
+        jira_user_id: users(project_id)[comment.author.email].id,
         project_id: project_id
       }
     end
 
     return if data_to_insert.blank?
 
-    Comment.insert_all(data_to_insert)
+    Comment.insert_all(data_to_insert, unique_by: [:project_id, :issue_id, :jira_user_id, :created_at])
   end
 
   def users(project)

@@ -17,5 +17,6 @@ class Project < ApplicationRecord
   with_options dependent: :destroy do
     has_many :issues
     has_many :jira_users
+    has_many :comments
   end
 end

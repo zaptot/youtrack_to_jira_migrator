@@ -27,11 +27,12 @@ class Attachment < ApplicationRecord
 
   belongs_to :comment, required: false
   belongs_to :issue
+  belongs_to :project
 
   scope :not_downloaded, -> { where(state: %i[new failed]) }
   scope :for_project, ->(project) { where(project_id: project) }
 
   def file_name
-    [project_id, issue_id, name].join('_')
+    [project_id, issue.number_in_project, name].join('_')
   end
 end

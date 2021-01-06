@@ -8,6 +8,7 @@
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  project_id :string
+#  full_name  :string
 #
 # Indexes
 #
@@ -24,4 +25,8 @@ class JiraUser < ApplicationRecord
   belongs_to :project, required: true
 
   scope :for_project, ->(project) { where(project_id: project) }
+
+  def name
+    email.split('@').first
+  end
 end

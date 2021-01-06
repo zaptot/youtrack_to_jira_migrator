@@ -14,7 +14,7 @@ module Youtrack::Entities
       elsif attrs.dig(:value).is_a?(String) || attrs.dig(:value).blank? || attrs.dig(:value).is_a?(Integer)
         attrs.dig(:value)
       elsif attrs.dig(:value).is_a?(Hash)
-        attrs.dig(:value)&.values_at(:email, :minutes, :name)&.compact&.first
+        attrs.dig(:value)&.values_at(:login, :minutes, :name)&.compact&.first
       else
         raise ArgumentError, 'unknown custom field value type'
       end
@@ -26,6 +26,12 @@ module Youtrack::Entities
 
     def field_name
       attrs[:name]
+    end
+
+    def user
+      if attrs.dig(:value).is_a?(Hash) && attrs[:value].values_at(:login, :email).compact.any?
+        User.new(attrs[:value])
+      end
     end
   end
 end

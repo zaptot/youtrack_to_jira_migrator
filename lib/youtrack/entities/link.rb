@@ -20,5 +20,9 @@ module Youtrack::Entities
     def issues_to
       attrs[:issues].map { |issue| Issue.new(issue.merge(partial: true)) }
     end
+
+    def direction
+      attrs[:direction]
+    end
   end
 end

@@ -17,7 +17,6 @@ module Youtrack
       sync_comments(data_to_sync[:comments])
       sync_links(data_to_sync[:links])
       sync_attachments(data_to_sync[:attachments])
-      download_attachments
     end
 
     private
@@ -29,8 +28,8 @@ module Youtrack
         memo[:issues] << issue
         memo[:comments] += issue.comments
         memo[:links] += issue.links
-        memo[:users] += [issue.author_email, issue.assignee.value].compact +
-                         issue.comments.map { |comment| comment.author_email }
+        memo[:users] += [issue.author, issue.assignee.user].compact +
+                         issue.comments.map { |comment| comment.author }
         memo[:attachments] += issue.attachments
       end
     end
@@ -54,6 +53,8 @@ module Youtrack
     def sync_links(links)
       Synchronizer::Link.sync(id, links)
     end
+
+    # no need in it=))
 
     def download_attachments
       Synchronizer::ImageDownloader.download_attachments(id)

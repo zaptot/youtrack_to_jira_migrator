@@ -10,7 +10,7 @@ module Youtrack::Synchronizer::Issue
         title: issue.title,
         description: issue.description,
         custom_fields: issue.json_custom_fields.select { |field| field[:value].present? },
-        jira_user_id: users(project_id)[issue.author_email].id,
+        jira_user_id: users(project_id)[issue.author.email].id,
         project_id: project_id,
         state: :new,
         tags: issue.tags,

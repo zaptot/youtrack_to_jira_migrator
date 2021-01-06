@@ -8,8 +8,8 @@ module Youtrack::Entities
       @comment = comment_attrs.with_indifferent_access
     end
 
-    def author_email
-      comment.dig(:author, :email)
+    def author
+      User.new(comment[:author])
     end
 
     def created_at

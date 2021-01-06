@@ -11,16 +11,16 @@ module Youtrack
         numberInProject
         summary
         description
-        reporter(email)
+        reporter(email,login)
         tags(name)
         created
-        attachments(name,url,draft,removed,issue(numberInProject),comment(author(email),text))
-        links(linkType(name),issues(numberInProject,project(shortName)))
-        customFields(name,fieldType,value(name,minutes,email))
-        comments(text,author(email),deleted,created,issue(numberInProject))
+        attachments(name,url,draft,removed,issue(numberInProject),comment(author(email,login),text))
+        links(linkType(name),issues(numberInProject,project(shortName)),direction)
+        customFields(name,fieldType,value(name,minutes,login,email))
+        comments(text,author(email,login),deleted,created,issue(numberInProject))
       ].join(',')
     }.freeze
-    PAGINATE_SIZE = 1
+    PAGINATE_SIZE = 500
 
     class << self
       def get_all_issues_by_project(client, project_id)
@@ -28,7 +28,7 @@ module Youtrack
           response = JSON(client.get([ISSUES_API_PATH], params: request_params(project_id, page)).body_str)
           issues << response
 
-          break issues.flatten # if response.size < PAGINATE_SIZE
+          break issues.flatten if response.size < PAGINATE_SIZE
         end
       end
 
