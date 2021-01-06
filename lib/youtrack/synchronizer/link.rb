@@ -11,12 +11,12 @@ module Youtrack::Synchronizer::Link
         next unless available_projects.include?(issue_to.project_id)
         next unless issues(issue_to.project_id)[issue_to.id].present?
 
-        issue_from_id, issue_to_id = calculate_issues_order(link, issue_to.id, link.parent_issue_id)
+        issue_from, issue_to = calculate_issues_order(link, issue_to, link.parent_issue_id, project_id)
 
         data_to_insert << {
           type: link.type,
-          issue_from_id: issues(project_id)[issue_from_id].id,
-          issue_to_id: issues(issue_to.project_id)[issue_to_id].id,
+          issue_from_id: issues(issue_from.project_id)[issue_from.id].id,
+          issue_to_id: issues(issue_to.project_id)[issue_to.id].id,
           state: :new,
           created_at: Time.now,
           updated_at: Time.now,
@@ -39,14 +39,14 @@ module Youtrack::Synchronizer::Link
     @available_projects ||= Project.pluck(:id)
   end
 
-  def calculate_issues_order(link, issue_to_id, parent_issue_id)
+  def calculate_issues_order(link, issue_to, parent_issue_id, parent_project_id)
     case link.direction
     when 'INWARD'
-      [issue_to_id, parent_issue_id]
+      [issue_to, Issue.new(id: parent_issue_id, project_id: parent_project_id)]
     when 'OUTWARD'
-      [parent_issue_id, issue_to_id]
+      [Issue.new(id: parent_issue_id, project_id: parent_project_id), issue_to]
     else
-      [issue_to_id, parent_issue_id].sort
+      [issue_to, Issue.new(id: parent_issue_id, project_id: parent_project_id)].sort_by(&:id)
     end
   end
 end
