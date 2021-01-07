@@ -28,7 +28,9 @@ module Jira
 
     def projects
       ActiveModel::ArraySerializer.new(
-        Project.where(id: project_id).preload(issues: [:jira_user, comments: :jira_user, attachments: :project]),
+        Project.where(id: project_id).preload(issues: [:jira_user,
+                                                       comments: [:jira_user, :attachments],
+                                                       attachments: :project]),
         each_serializer: ProjectSerializer
       ).serializable_array
     end

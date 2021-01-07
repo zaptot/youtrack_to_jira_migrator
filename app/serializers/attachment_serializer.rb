@@ -1,11 +1,7 @@
 # frozen_string_literal: true
 
 class AttachmentSerializer < ActiveModel::Serializer
-  attributes :name, :attacher, :uri
-
-  def attacher
-    'admin'
-  end
+  attributes :name, :uri
 
   def uri
     File.join(object.project.youtrack_url, object.url)

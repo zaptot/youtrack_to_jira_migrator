@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_05_232615) do
+ActiveRecord::Schema.define(version: 2021_01_07_114957) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -78,10 +78,11 @@ ActiveRecord::Schema.define(version: 2021_01_05_232615) do
     t.string "state"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "project_id"
+    t.string "project_from_id"
+    t.string "project_to_id"
     t.index ["issue_from_id"], name: "index_links_on_issue_from_id"
     t.index ["issue_to_id"], name: "index_links_on_issue_to_id"
-    t.index ["project_id"], name: "index_links_on_project_id"
+    t.index ["project_from_id"], name: "index_links_on_project_from_id"
     t.index ["type", "issue_from_id", "issue_to_id"], name: "index_links_on_type_and_issue_from_id_and_issue_to_id", unique: true
   end
 
@@ -91,6 +92,7 @@ ActiveRecord::Schema.define(version: 2021_01_05_232615) do
     t.string "youtrack_url", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "workflow_name"
     t.index ["id"], name: "index_projects_on_id"
   end
 

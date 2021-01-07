@@ -26,7 +26,17 @@ class JiraUser < ApplicationRecord
 
   scope :for_project, ->(project) { where(project_id: project) }
 
-  def name
-    email.split('@').first
+  after_commit :clear_cache
+
+  def self.full_names_by_project(project_id)
+    @full_names_by_project ||= {}
+    @full_names_by_project[project_id] ||= for_project(project_id).pluck(:full_name)
+    @full_names_by_project[project_id]
+  end
+
+  private
+
+  def clear_cache
+    @full_names_by_project = nil
   end
 end

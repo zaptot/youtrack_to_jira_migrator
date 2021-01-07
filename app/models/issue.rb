@@ -23,7 +23,7 @@
 class Issue < ApplicationRecord
   self.inheritance_column = :_type_disabled
 
-  SYSTEM_CUSTOM_FIELDS = (%w[Assignee Type Estimation] + ['Spent time']).freeze
+  SYSTEM_CUSTOM_FIELDS = (%w[Assignee Type Estimation State] + ['Spent time', 'Fix versions']).freeze
 
   include Syncable
 
@@ -56,6 +56,10 @@ class Issue < ApplicationRecord
 
   def status
     custom_field_by_name('State')&.dig('value')
+  end
+
+  def fix_versions
+    [custom_field_by_name('Fix versions')&.dig('value')].compact
   end
 
   def type

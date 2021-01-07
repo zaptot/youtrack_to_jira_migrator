@@ -4,7 +4,7 @@ class IssueSerializer < ActiveModel::Serializer
   attributes :description, :reporter, :assignee, :customFieldValues, :status, :key,
              title: :summary, tags: :labels, number_in_project: :externalId,
              created_at: :created, type: :issueType, time_spent: :timeSpent,
-             estimate: :originalEstimate
+             estimate: :originalEstimate, fix_versions: :fixedVersions
 
   has_many :attachments
   has_many :comments
@@ -27,6 +27,10 @@ class IssueSerializer < ActiveModel::Serializer
 
   def reporter
     object.jira_user.full_name
+  end
+
+  def description
+    SyntaxMigrator.migrate_text_to_jira_syntax(object.description, object.project_id)
   end
 
   def customFieldValues

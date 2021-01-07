@@ -8,6 +8,7 @@
 #  youtrack_url   :string           not null
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
+#  workflow_name  :string
 #
 # Indexes
 #
@@ -18,5 +19,11 @@ class Project < ApplicationRecord
     has_many :issues
     has_many :jira_users
     has_many :comments
+  end
+
+  def self.youtrack_url_by_project(project_id)
+    @youtrack_url_by_project ||= {}
+    @youtrack_url_by_project[project_id] ||= Project.find(project_id).youtrack_url
+    @youtrack_url_by_project[project_id]
   end
 end

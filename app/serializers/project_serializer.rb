@@ -1,16 +1,12 @@
 # frozen_string_literal: true
 
 class ProjectSerializer < ActiveModel::Serializer
-  attributes :type, :workflowSchemeName, :versions, full_name: :name, id: :key
+  attributes :type, :versions, full_name: :name, id: :key, workflow_name: :workflowSchemeName
 
   has_many :issues
 
   def type
     :software
-  end
-
-  def workflowSchemeName
-    'asdf'
   end
 
   def versions

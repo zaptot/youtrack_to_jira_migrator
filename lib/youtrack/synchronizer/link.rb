@@ -7,7 +7,6 @@ module Youtrack::Synchronizer::Link
     data_to_insert = []
     links.each do |link|
       link.issues_to.each do |issue_to|
-        # TODO: add logs of unsaved links or system for resync them ??
         next unless available_projects.include?(issue_to.project_id)
         next unless issues(issue_to.project_id)[issue_to.id].present?
 
@@ -20,7 +19,8 @@ module Youtrack::Synchronizer::Link
           state: :new,
           created_at: Time.now,
           updated_at: Time.now,
-          project_id: project_id
+          project_from_id: issue_from.project_id,
+          project_to_id: issue_to.project_id
         }
       end
     end
