@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 SIZE_OF_SEED = 5
 
 %w[TD LIVE].each do |project_id|

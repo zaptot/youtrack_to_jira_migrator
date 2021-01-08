@@ -1,0 +1,8 @@
+<%= semantic_form_for [:admin, resource] do |f| %>
+  <% if resource.persisted? %>
+    <%= f.inputs :full_name, :youtrack_url, :youtrack_token, :workflow_name %>
+  <% else %>
+    <%= f.inputs :id, :full_name, :youtrack_url, :youtrack_token, :workflow_name %>
+  <% end %>
+  <%= f.button :commit %>
+<% end %>

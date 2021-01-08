@@ -30,6 +30,7 @@ module Youtrack
     def validate_response(curl)
       return if (200..204).include?(curl.response_code)
 
+      Rails.logger.info curl.body_str
       raise 'bad request'
     end
 
