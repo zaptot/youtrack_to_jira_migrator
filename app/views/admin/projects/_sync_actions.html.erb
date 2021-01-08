@@ -1,5 +1,5 @@
-<%= semantic_form_for resource, url: sync_admin_project_path(resource), method: :patch do |f| %>
-  <% f.actions do %>
-    <%= f.action :submit, label: 'Sync Project' %>
-  <% end %>
+<%= button_to 'Sync Project', sync_admin_project_path(resource) unless resource.processing? %>
+
+<% if resource.state.in?(Project::SUCCESS_STATES) %>
+  <%= button_to 'Download import file', download_import_admin_project_path(resource), method: :get %>
 <% end %>

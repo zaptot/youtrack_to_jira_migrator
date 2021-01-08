@@ -32,10 +32,18 @@ ActiveAdmin.register Project do
     end
   end
 
-  member_action :sync, method: :patch do
+  member_action :sync, method: :post do
     resource.start_sync!
 
-    Youtrack::Synchronizer.new(resource.id).sync
+    IssueSyncerJob.perform_async(resource.id)
+
+    redirect_to resource_path(resource)
+  end
+
+  member_action :download_import, method: :get do
+    file = Jira::ImportGenerator.generate(resource.id)
+
+    send_file file, type: 'application/json'
   end
 
   filter :id

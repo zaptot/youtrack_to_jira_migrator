@@ -26,5 +26,5 @@ class Link < ApplicationRecord
     belongs_to :issue_to, class_name: 'Issue', foreign_key: :issue_to_id
   end
 
-  scope :for_project, ->(project_id) { where('project_from_id = :p_id OR project_to_id = :p_id', p_id: project_id) }
+  scope :for_project, ->(project_id) { where(project_from_id: project_id) }
 end

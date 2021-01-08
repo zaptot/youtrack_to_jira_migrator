@@ -19,9 +19,10 @@ module Jira
         users: users,
         links: links,
         projects: projects
-      }
+      }.to_json
 
-      File.open(Rails.root.join('tmp/test_import.json'), 'w') { |file| file.write(res.to_json) }
+      File.open(file_path, 'w') { |file| file.write(res) }
+      file_path
     end
 
     private
@@ -47,6 +48,11 @@ module Jira
         Link.for_project('TD').preload(:issue_to, :issue_from),
         each_serializer: LinkSerializer
       ).serializable_array
+    end
+
+    def file_path
+      file_name = "#{project_id}_import_#{Time.now}.json"
+      Rails.root.join("tmp/#{file_name}")
     end
   end
 end

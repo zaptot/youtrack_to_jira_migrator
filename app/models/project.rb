@@ -18,6 +18,8 @@
 class Project < ApplicationRecord
   include AASM
 
+  SUCCESS_STATES = %w[synced].freeze
+
   with_options dependent: :destroy do
     has_many :issues
     has_many :jira_users
