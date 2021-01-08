@@ -7,7 +7,6 @@ module Youtrack::Synchronizer::Comment
     data_to_insert = comments.map do |comment|
       {
         body: comment.body,
-        state: :new,
         created_at: comment.created_at || Time.now,
         updated_at: Time.now,
         issue_id: issues(project_id)[comment.issue_number_in_project].id,

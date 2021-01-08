@@ -11,7 +11,6 @@ module Youtrack::Synchronizer::Attachment
         name: attachment.name,
         url: attachment.url,
         project_id: project_id,
-        state: :new,
         created_at: Time.now,
         updated_at: Time.now
       }

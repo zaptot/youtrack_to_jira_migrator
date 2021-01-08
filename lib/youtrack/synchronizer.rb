@@ -17,6 +17,10 @@ module Youtrack
       sync_comments(data_to_sync[:comments])
       sync_links(data_to_sync[:links])
       sync_attachments(data_to_sync[:attachments])
+    rescue
+      project.fail!
+    ensure
+      project.sync! unless project.failed?
     end
 
     private

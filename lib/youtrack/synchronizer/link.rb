@@ -16,7 +16,6 @@ module Youtrack::Synchronizer::Link
           type: link.type,
           issue_from_id: issues(issue_from.project_id)[issue_from.id].id,
           issue_to_id: issues(issue_to.project_id)[issue_to.id].id,
-          state: :new,
           created_at: Time.now,
           updated_at: Time.now,
           project_from_id: issue_from.project_id,

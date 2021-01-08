@@ -9,7 +9,6 @@ module Youtrack::Synchronizer::User
         email: user.email,
         full_name: user.full_name,
         project_id: project_id,
-        state: :new,
         created_at: Time.now,
         updated_at: Time.now
       }

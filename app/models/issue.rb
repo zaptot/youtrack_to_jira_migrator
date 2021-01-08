@@ -6,7 +6,6 @@
 #  number_in_project :bigint           not null
 #  title             :string           not null
 #  description       :text
-#  state             :string           not null
 #  tags              :string           default([]), is an Array
 #  custom_fields     :jsonb
 #  created_at        :datetime         not null
@@ -24,8 +23,6 @@ class Issue < ApplicationRecord
   self.inheritance_column = :_type_disabled
 
   SYSTEM_CUSTOM_FIELDS = (%w[Assignee Type Estimation State] + ['Spent time', 'Fix versions']).freeze
-
-  include Syncable
 
   with_options required: true do
     belongs_to :jira_user

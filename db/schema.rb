@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_08_154902) do
+ActiveRecord::Schema.define(version: 2021_01_08_164641) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,7 +34,6 @@ ActiveRecord::Schema.define(version: 2021_01_08_154902) do
     t.bigint "issue_id"
     t.string "url"
     t.string "name"
-    t.string "state"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "project_id"
@@ -47,7 +46,6 @@ ActiveRecord::Schema.define(version: 2021_01_08_154902) do
 
   create_table "comments", force: :cascade do |t|
     t.text "body"
-    t.string "state"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "jira_user_id", null: false
@@ -63,7 +61,6 @@ ActiveRecord::Schema.define(version: 2021_01_08_154902) do
     t.bigint "number_in_project", null: false
     t.string "title", null: false
     t.text "description"
-    t.string "state", null: false
     t.string "tags", default: [], array: true
     t.jsonb "custom_fields", default: {}
     t.datetime "created_at", precision: 6, null: false
@@ -77,7 +74,6 @@ ActiveRecord::Schema.define(version: 2021_01_08_154902) do
 
   create_table "jira_users", force: :cascade do |t|
     t.string "email"
-    t.string "state"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "project_id"
@@ -89,7 +85,6 @@ ActiveRecord::Schema.define(version: 2021_01_08_154902) do
     t.string "type"
     t.bigint "issue_from_id"
     t.bigint "issue_to_id"
-    t.string "state"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "project_from_id"
@@ -107,6 +102,7 @@ ActiveRecord::Schema.define(version: 2021_01_08_154902) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "workflow_name"
+    t.string "state"
     t.index ["id"], name: "index_projects_on_id"
   end
 

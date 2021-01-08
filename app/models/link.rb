@@ -6,7 +6,6 @@
 #  type            :string
 #  issue_from_id   :bigint
 #  issue_to_id     :bigint
-#  state           :string
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  project_from_id :string

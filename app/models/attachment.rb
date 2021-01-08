@@ -7,7 +7,6 @@
 #  issue_id   :bigint
 #  url        :string
 #  name       :string
-#  state      :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  project_id :string
@@ -21,8 +20,6 @@
 #  index_attachments_on_url                (url)
 #
 class Attachment < ApplicationRecord
-  include Syncable
-
   FOLDER_PATH = 'app/assets/attachments'
 
   belongs_to :comment, required: false

@@ -12,7 +12,6 @@ module Youtrack::Synchronizer::Issue
         custom_fields: issue.json_custom_fields.select { |field| field[:value].present? },
         jira_user_id: users(project_id)[issue.author.email].id,
         project_id: project_id,
-        state: :new,
         tags: issue.tags,
         created_at: issue.created_at || Time.now,
         updated_at: Time.now

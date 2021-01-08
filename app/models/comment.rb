@@ -4,7 +4,6 @@
 #
 #  id           :bigint           not null, primary key
 #  body         :text
-#  state        :string
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
 #  jira_user_id :bigint           not null
@@ -19,8 +18,6 @@
 #  uniq_comments_index             (project_id,issue_id,jira_user_id,created_at) UNIQUE
 #
 class Comment < ApplicationRecord
-  include Syncable
-
   belongs_to :jira_user
   belongs_to :issue
   has_many :attachments, dependent: :destroy
