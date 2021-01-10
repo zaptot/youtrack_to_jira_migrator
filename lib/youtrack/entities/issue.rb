@@ -36,6 +36,10 @@ module Youtrack::Entities
       attrs[:tags].map { |tag| tag[:name] }
     end
 
+    def resolved
+      attrs[:resolved].present?
+    end
+
     def attachments
       @attachments ||= attrs[:attachments].map { |attach| Attachment.new(attach) }
     end

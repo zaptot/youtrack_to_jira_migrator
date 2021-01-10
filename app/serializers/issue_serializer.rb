@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class IssueSerializer < ActiveModel::Serializer
-  attributes :description, :reporter, :assignee, :customFieldValues, :status, :key,
+  attributes :description, :reporter, :assignee, :customFieldValues, :status, :key, :resolution,
              title: :summary, tags: :labels, number_in_project: :externalId,
              created_at: :created, type: :issueType, estimate: :originalEstimate,
              fix_versions: :fixedVersions
@@ -28,6 +28,10 @@ class IssueSerializer < ActiveModel::Serializer
 
   def reporter
     object.jira_user.full_name
+  end
+
+  def resolution
+    object.resolved? ? 'Resolved' : 'Unresolved'
   end
 
   def description

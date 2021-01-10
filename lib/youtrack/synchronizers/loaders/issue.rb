@@ -7,6 +7,7 @@ module Youtrack::Synchronizers::Loaders::Issue
     data_to_insert = issues.map do |issue|
       {
         number_in_project: issue.id,
+        resolved: issue.resolved,
         title: issue.title,
         description: issue.description,
         custom_fields: issue.json_custom_fields.select { |field| field[:value].present? },

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_10_175354) do
+ActiveRecord::Schema.define(version: 2021_01_10_202253) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -67,6 +67,7 @@ ActiveRecord::Schema.define(version: 2021_01_10_175354) do
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "jira_user_id", null: false
     t.string "project_id"
+    t.boolean "resolved"
     t.index ["jira_user_id"], name: "index_issues_on_jira_user_id"
     t.index ["number_in_project"], name: "index_issues_on_number_in_project"
     t.index ["project_id", "number_in_project"], name: "index_issues_on_project_id_and_number_in_project", unique: true

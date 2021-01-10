@@ -10,6 +10,7 @@ module Youtrack::Scrappers
         project(shortName)
         numberInProject
         summary
+        resolved
         description
         reporter(email,login)
         tags(name)

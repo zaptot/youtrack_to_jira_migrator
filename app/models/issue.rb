@@ -12,6 +12,7 @@
 #  updated_at        :datetime         not null
 #  jira_user_id      :bigint           not null
 #  project_id        :string
+#  resolved          :boolean
 #
 # Indexes
 #
