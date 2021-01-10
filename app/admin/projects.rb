@@ -32,10 +32,18 @@ ActiveAdmin.register Project do
     end
   end
 
-  member_action :sync, method: :post do
-    resource.start_sync!
+  member_action :sync_issues, method: :post do
+    resource.start_sync_issues!
 
     IssueSyncerJob.perform_async(resource.id)
+
+    redirect_to resource_path(resource)
+  end
+
+  member_action :sync_worklogs, method: :post do
+    resource.start_sync_worklogs!
+
+    WorklogsSyncerJob.perform_async(resource.id)
 
     redirect_to resource_path(resource)
   end

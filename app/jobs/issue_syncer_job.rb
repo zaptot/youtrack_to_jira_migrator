@@ -3,6 +3,6 @@ class IssueSyncerJob
   workers 4
 
   def perform(project_id)
-    Youtrack::Synchronizer.new(project_id).sync
+    Youtrack::Synchronizer.new(project_id).sync_issues
   end
 end

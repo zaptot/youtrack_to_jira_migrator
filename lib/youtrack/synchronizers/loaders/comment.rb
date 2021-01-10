@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-module Youtrack::Synchronizer::Comment
+module Youtrack::Synchronizers::Loaders::Comment
   module_function
 
-  def sync(project_id, comments)
+  def load(project_id, comments)
     data_to_insert = comments.map do |comment|
       {
         body: comment.body,

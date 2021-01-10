@@ -18,7 +18,10 @@
 class Project < ApplicationRecord
   include AASM
 
-  SUCCESS_STATES = %w[synced].freeze
+  SUCCESS_STATES = %w[worklogs_synced issues_synced].freeze
+  WORKLOGS_ACCEPTABLE_STATUSES = %w[worklogs_synced issues_synced].freeze
+  AVAILABLE_STATES = %w[created failed issues_synced worklogs_synced
+                        processing_worklogs processing_issues].freeze
 
   with_options dependent: :destroy do
     has_many :issues
@@ -26,24 +29,34 @@ class Project < ApplicationRecord
     has_many :comments
   end
 
-  enum state: %w[created processing synced failed].map { |status| [status, status] }.to_h
+  enum state: AVAILABLE_STATES.map { |status| [status, status] }.to_h
 
   aasm column: :state, enum: true do
     state :created, initial: true
-    state :synced
     state :failed
-    state :processing
+    state :issues_synced
+    state :worklogs_synced
+    state :processing_issues
+    state :processing_worklogs
 
-    event :start_sync do
-      transitions from: %i[created synced failed], to: :processing
+    event :sync_issues do
+      transitions from: %i[processing_issues], to: :issues_synced
     end
 
-    event :sync do
-      transitions from: %i[processing], to: :synced
+    event :sync_worklogs do
+      transitions from: %i[processing_worklogs], to: :worklogs_synced
+    end
+
+    event :start_sync_worklogs do
+      transitions from: WORKLOGS_ACCEPTABLE_STATUSES, to: :processing_worklogs
+    end
+
+    event :start_sync_issues do
+      transitions from: %i[created worklogs_synced issues_synced failed], to: :processing_issues
     end
 
     event :fail do
-      transitions from: %i[processing created], to: :failed
+      transitions from: %i[processing_worklogs processing_issues created], to: :failed
     end
   end
 
@@ -51,5 +64,13 @@ class Project < ApplicationRecord
     @youtrack_url_by_project ||= {}
     @youtrack_url_by_project[project_id] ||= Project.find(project_id).youtrack_url
     @youtrack_url_by_project[project_id]
+  end
+
+  def processing?
+    state.in?(%w[processing_worklogs processing_issues])
+  end
+
+  def can_sync_worklogs?
+    WORKLOGS_ACCEPTABLE_STATUSES.include?(state)
   end
 end

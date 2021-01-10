@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-module Youtrack::Synchronizer::Link
+module Youtrack::Synchronizers::Loaders::Link
   module_function
 
-  def sync(project_id, links)
+  def load(project_id, links)
     data_to_insert = []
     links.each do |link|
       link.issues_to.each do |issue_to|

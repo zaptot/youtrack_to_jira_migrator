@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_08_164641) do
+ActiveRecord::Schema.define(version: 2021_01_10_175354) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -104,6 +104,20 @@ ActiveRecord::Schema.define(version: 2021_01_08_164641) do
     t.string "workflow_name"
     t.string "state"
     t.index ["id"], name: "index_projects_on_id"
+  end
+
+  create_table "worklogs", force: :cascade do |t|
+    t.string "text"
+    t.datetime "date", null: false
+    t.integer "duration"
+    t.string "project_id", null: false
+    t.bigint "jira_user_id"
+    t.bigint "issue_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["issue_id"], name: "index_worklogs_on_issue_id"
+    t.index ["jira_user_id"], name: "index_worklogs_on_jira_user_id"
+    t.index ["project_id"], name: "index_worklogs_on_project_id"
   end
 
 end

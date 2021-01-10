@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-module Youtrack::Synchronizer::Issue
+module Youtrack::Synchronizers::Loaders::Issue
   module_function
 
-  def sync(project_id, issues)
+  def load(project_id, issues)
     data_to_insert = issues.map do |issue|
       {
         number_in_project: issue.id,

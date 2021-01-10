@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-module Youtrack::Synchronizer::Attachment
+module Youtrack::Synchronizers::Loaders::Attachment
   module_function
 
-  def sync(project_id, attachments)
+  def load(project_id, attachments)
     data_to_insert = attachments.map do |attachment|
       {
         comment_id: find_attachment_comment(project_id, attachment)&.id,

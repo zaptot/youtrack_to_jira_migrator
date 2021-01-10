@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-module Youtrack::Synchronizer::User
+module Youtrack::Synchronizers::Loaders::User
   module_function
 
-  def sync(project_id, users)
+  def load(project_id, users)
     data_to_insert = users.map do |user|
       {
         email: user.email,

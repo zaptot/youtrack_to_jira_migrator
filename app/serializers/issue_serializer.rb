@@ -3,11 +3,12 @@
 class IssueSerializer < ActiveModel::Serializer
   attributes :description, :reporter, :assignee, :customFieldValues, :status, :key,
              title: :summary, tags: :labels, number_in_project: :externalId,
-             created_at: :created, type: :issueType, time_spent: :timeSpent,
-             estimate: :originalEstimate, fix_versions: :fixedVersions
+             created_at: :created, type: :issueType, estimate: :originalEstimate,
+             fix_versions: :fixedVersions
 
   has_many :attachments
   has_many :comments
+  has_many :worklogs
 
   CUSTOM_FIELDS_TYPE_MAPPINGS = {
     'SingleEnumIssueCustomField' => 'com.atlassian.jira.plugin.system.customfieldtypes:select',

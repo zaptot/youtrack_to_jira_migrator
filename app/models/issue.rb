@@ -33,6 +33,7 @@ class Issue < ApplicationRecord
     has_many :links, foreign_key: :issue_from_id
     has_many :attachments
     has_many :comments
+    has_many :worklogs
   end
 
   scope :for_project, ->(project_id) { where(project_id: project_id) }
@@ -41,10 +42,6 @@ class Issue < ApplicationRecord
     def system_field_values(system_field_name)
       pluck(:custom_fields).flatten.uniq.select { |field| field['field_name'] == system_field_name }.map { |field| field['value'] }
     end
-  end
-
-  def name
-    'test name for issue debug'
   end
 
   def assignee
