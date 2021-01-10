@@ -15,6 +15,8 @@ module Youtrack::Scrappers
         reporter(email,login)
         tags(name)
         created
+        voters(original(email,login))
+        watchers(issueWatchers(user(email,login)))
         attachments(name,url,draft,removed,issue(numberInProject),comment(author(email,login),text))
         links(linkType(name),issues(numberInProject,project(shortName)),direction)
         customFields(name,fieldType,value(name,minutes,login,email))

@@ -7,6 +7,8 @@ module Youtrack::Synchronizers::Loaders::Issue
     data_to_insert = issues.map do |issue|
       {
         number_in_project: issue.id,
+        voters: issue.voters.map { |user| user.full_name },
+        watchers: issue.watchers.map { |user| user.full_name },
         resolved: issue.resolved,
         title: issue.title,
         description: issue.description,

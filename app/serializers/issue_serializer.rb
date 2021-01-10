@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 class IssueSerializer < ActiveModel::Serializer
-  attributes :description, :reporter, :assignee, :customFieldValues, :status, :key, :resolution,
+  attributes :description, :reporter, :assignee, :customFieldValues, :status, :key,
+             :resolution, :watchers, :voters, fix_versions: :fixedVersions,
              title: :summary, tags: :labels, number_in_project: :externalId,
-             created_at: :created, type: :issueType, estimate: :originalEstimate,
-             fix_versions: :fixedVersions
+             created_at: :created, type: :issueType, estimate: :originalEstimate
 
   has_many :attachments
   has_many :comments

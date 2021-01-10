@@ -23,7 +23,8 @@ module Youtrack::Synchronizers
         memo[:comments] += issue.comments
         memo[:links] += issue.links
         memo[:users] += [issue.author, issue.assignee.user].compact +
-          issue.comments.map { |comment| comment.author }
+                        issue.comments.map { |comment| comment.author } +
+                        issue.voters + issue.watchers
         memo[:attachments] += issue.attachments
       end
     end

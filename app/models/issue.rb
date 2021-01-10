@@ -13,6 +13,8 @@
 #  jira_user_id      :bigint           not null
 #  project_id        :string
 #  resolved          :boolean
+#  voters            :string           is an Array
+#  watchers          :string           is an Array
 #
 # Indexes
 #

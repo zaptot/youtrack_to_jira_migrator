@@ -40,6 +40,16 @@ module Youtrack::Entities
       attrs[:resolved].present?
     end
 
+    def voters
+      attrs.dig(:voters, :original).map { |user| User.new(user) }
+    end
+
+    def watchers
+      attrs.dig(:watchers, :issueWatchers).map do |issue_watcher|
+        User.new(issue_watcher[:user])
+      end
+    end
+
     def attachments
       @attachments ||= attrs[:attachments].map { |attach| Attachment.new(attach) }
     end
