@@ -67,7 +67,7 @@ ActiveRecord::Schema.define(version: 2021_01_10_204217) do
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "jira_user_id", null: false
     t.string "project_id"
-    t.boolean "resolved"
+    t.datetime "resolved"
     t.string "voters", array: true
     t.string "watchers", array: true
     t.index ["jira_user_id"], name: "index_issues_on_jira_user_id"

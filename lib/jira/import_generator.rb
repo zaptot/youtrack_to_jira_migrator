@@ -39,14 +39,14 @@ module Jira
 
     def users
       ActiveModel::ArraySerializer.new(
-        JiraUser.for_project('TD'),
+        JiraUser.for_project(project_id),
         each_serializer: JiraUserSerializer
       ).serializable_array
     end
 
     def links
       ActiveModel::ArraySerializer.new(
-        Link.for_project('TD').preload(:issue_to, :issue_from),
+        Link.for_project(project_id).preload(:issue_to, :issue_from),
         each_serializer: LinkSerializer
       ).serializable_array
     end

@@ -37,7 +37,7 @@ module Youtrack::Entities
     end
 
     def resolved
-      attrs[:resolved].present?
+      Time.at(attrs[:resolved].to_i / 1000) if attrs[:resolved]
     end
 
     def voters

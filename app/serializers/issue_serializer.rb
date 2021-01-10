@@ -4,7 +4,8 @@ class IssueSerializer < ActiveModel::Serializer
   attributes :description, :reporter, :assignee, :customFieldValues, :status, :key,
              :resolution, :watchers, :voters, fix_versions: :fixedVersions,
              title: :summary, tags: :labels, number_in_project: :externalId,
-             created_at: :created, type: :issueType, estimate: :originalEstimate
+             created_at: :created, type: :issueType, estimate: :originalEstimate,
+             resolved: :resolutionDate
 
   has_many :attachments
   has_many :comments
@@ -31,7 +32,7 @@ class IssueSerializer < ActiveModel::Serializer
   end
 
   def resolution
-    object.resolved? ? 'Resolved' : 'Unresolved'
+    object.resolved.present? ? 'Resolved' : 'Unresolved'
   end
 
   def description
