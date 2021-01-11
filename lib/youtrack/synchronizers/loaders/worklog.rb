@@ -7,9 +7,6 @@ module Youtrack::Synchronizers::Loaders::Worklog
     Worklog.for_project(project_id).delete_all
 
     data_to_insert = worklogs.map do |worklog|
-      worklog = Youtrack::Entities::Worklog.instance.init(worklog, project_id)
-      author = Youtrack::Entities::User.instance.init(worklog.author)
-
       {
         text: worklog.text,
         date: worklog.date,
@@ -17,7 +14,7 @@ module Youtrack::Synchronizers::Loaders::Worklog
         created_at: worklog.created_at || Time.now,
         updated_at: Time.now,
         issue_id: issues(project_id)[worklog.issue_number_in_project].id,
-        jira_user_id: users(project_id)[author.email].id,
+        jira_user_id: users(project_id)[worklog.author.email].id,
         project_id: project_id
       }
     end

@@ -2,29 +2,26 @@
 
 module Youtrack::Entities
   class Comment
-    include Singleton
-
     attr_reader :comment
 
-    def init(comment_attrs)
-      @comment = comment_attrs
-      self
+    def initialize(comment_attrs)
+      @comment = comment_attrs.with_indifferent_access
     end
 
     def author
-      comment['author']
+      User.new(comment[:author])
     end
 
     def created_at
-      Time.at(comment['created'].to_i / 1000)
+      Time.at(comment[:created].to_i / 1000)
     end
 
     def body
-      comment['text']
+      comment[:text]
     end
 
     def issue_number_in_project
-      comment.dig('issue', 'numberInProject')
+      comment.dig(:issue, :numberInProject)
     end
   end
 end

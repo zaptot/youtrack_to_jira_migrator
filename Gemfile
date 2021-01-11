@@ -63,4 +63,3 @@ gem 'active_model_serializers'
 
 gem 'activeadmin'
 gem 'sucker_punch'
-gem 'singleton'

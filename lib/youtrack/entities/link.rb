@@ -2,33 +2,27 @@
 
 module Youtrack::Entities
   class Link
-    include Singleton
+    attr_reader :attrs, :parent_issue_id
 
-    attr_reader :attrs
-
-    def init(attrs)
-      @attrs = attrs
-      self
+    def initialize(attrs, issue_id)
+      @parent_issue_id = issue_id
+      @attrs = attrs.with_indifferent_access
     end
 
     def type
-      attrs.dig('linkType', 'name')
+      attrs.dig(:linkType, :name)
     end
 
     def issue_from
-      attrs.dig('issue', 'numberInProject')
+      attrs.dig(:issue, :numberInProject)
     end
 
     def issues_to
-      attrs['issues']
+      attrs[:issues].map { |issue| Issue.new(issue.merge(partial: true)) }
     end
 
     def direction
-      attrs['direction']
-    end
-
-    def parent_issue_id
-      attrs['parent_issue_id']
+      attrs[:direction]
     end
   end
 end

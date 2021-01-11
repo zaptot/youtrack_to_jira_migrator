@@ -23,7 +23,6 @@ ActiveAdmin.register Project do
       row :youtrack_url
       row :youtrack_token
       row :state
-      row :workflow_name
       row :created_at
       row :updated_at
     end

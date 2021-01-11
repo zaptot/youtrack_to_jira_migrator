@@ -5,8 +5,6 @@ module Youtrack::Synchronizers::Loaders::Attachment
 
   def load(project_id, attachments)
     data_to_insert = attachments.map do |attachment|
-      attachment = Youtrack::Entities::Attachment.instance.init(attachment)
-
       {
         comment_id: find_attachment_comment(project_id, attachment)&.id,
         issue_id: issues(project_id)[attachment.issue_number_in_project].id,
@@ -26,12 +24,9 @@ module Youtrack::Synchronizers::Loaders::Attachment
   def find_attachment_comment(project, attachment)
     return if attachment.comment.blank?
 
-    comment = Youtrack::Entities::Comment.instance.init(attachment.comment)
-    author = Youtrack::Entities::User.instance.init(comment.author)
-
-    Comment.find_by(jira_user: users(project)[author.email],
+    Comment.find_by(jira_user: users(project)[attachment.comment.author.email],
                     issue: issues(project)[attachment.issue_number_in_project],
-                    body: comment.body)
+                    body: attachment.comment.body)
   end
 
   def issues(project)

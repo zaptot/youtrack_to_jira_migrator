@@ -6,11 +6,7 @@ module Youtrack::Synchronizers::Loaders::Link
   def load(project_id, links)
     data_to_insert = []
     links.each do |link|
-      link = Youtrack::Entities::Link.instance.init(link)
-
       link.issues_to.each do |issue_to|
-        issue_to = Youtrack::Entities::Issue.instance.init(issue_to)
-
         next unless available_projects.include?(issue_to.project_id)
         next unless issues(issue_to.project_id)[issue_to.id].present?
 
