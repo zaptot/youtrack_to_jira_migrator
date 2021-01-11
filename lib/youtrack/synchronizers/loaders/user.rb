@@ -5,7 +5,8 @@ module Youtrack::Synchronizers::Loaders::User
 
   def load(project_id, users)
     data_to_insert = users.map do |user|
-      next if user.email.blank? || user.full_name.blank?
+      user = Youtrack::Entities::User.instance.init(user)
+      next if user.email.blank? && user.full_name.blank?
 
       {
         email: user.email,
@@ -14,7 +15,7 @@ module Youtrack::Synchronizers::Loaders::User
         created_at: Time.now,
         updated_at: Time.now
       }
-    end
+    end.compact
 
     return if data_to_insert.blank?
 

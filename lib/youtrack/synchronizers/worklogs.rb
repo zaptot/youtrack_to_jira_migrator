@@ -14,9 +14,9 @@ module Youtrack::Synchronizers
 
     def data_to_load
       @data_to_load ||= Youtrack::Scrappers::Worklogs.scrape(client, project_id)
-                          .each_with_object(Hash.new { |k, v| k[v] = Set.new }) do |worklog, memo|
-        worklog = Youtrack::Entities::Worklog.new(worklog, project_id)
+                          .each_with_object(Hash.new { |k, v| k[v] = [] }) do |worklog, memo|
         memo[:worklogs] << worklog
+        worklog = Youtrack::Entities::Worklog.instance.init(worklog, project_id)
         memo[:users] << worklog.author
       end
     end

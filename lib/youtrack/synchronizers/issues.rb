@@ -17,36 +17,37 @@ module Youtrack::Synchronizers
 
     def data_to_load
       @data_to_sync ||= Youtrack::Scrappers::Issues.scrape(client, project_id)
-                          .each_with_object(Hash.new { |k, v| k[v] = Set.new }) do |issue, memo|
-        issue = Youtrack::Entities::Issue.new(issue)
+                          .each_with_object(Hash.new { |k, v| k[v] = [] }) do |issue, memo|
         memo[:issues] << issue
+        issue = Youtrack::Entities::Issue.instance.init(issue)
+        assignee = Youtrack::Entities::CustomField.instance.init(issue.assignee)
         memo[:comments] += issue.comments
         memo[:links] += issue.links
-        memo[:users] += [issue.author, issue.assignee.user].compact +
-                        issue.comments.map { |comment| comment.author } +
+        memo[:users] += [issue.author, assignee.user].compact +
+                        issue.comments.map { |comment| Youtrack::Entities::Comment.instance.init(comment).author } +
                         issue.voters + issue.watchers
         memo[:attachments] += issue.attachments
       end
     end
 
     def load_users(users)
-      Loaders::User.load(project_id, users)
+      Loaders::User.load(project_id, users.uniq)
     end
 
     def load_issues(issues)
-      Loaders::Issue.load(project_id, issues)
+      Loaders::Issue.load(project_id, issues.uniq)
     end
 
     def load_comments(comments)
-      Loaders::Comment.load(project_id, comments)
+      Loaders::Comment.load(project_id, comments.uniq)
     end
 
     def load_attachments(attachments)
-      Loaders::Attachment.load(project_id, attachments)
+      Loaders::Attachment.load(project_id, attachments.uniq)
     end
 
     def load_links(links)
-      Loaders::Link.load(project_id, links)
+      Loaders::Link.load(project_id, links.uniq)
     end
   end
 end
