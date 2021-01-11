@@ -9,11 +9,11 @@ module Youtrack::Entities
     end
 
     def email
-      attrs[:email]
+      attrs[:email] || attrs[:login]
     end
 
     def full_name
-      attrs[:login]
+      attrs[:login] || attrs[:email]
     end
   end
 end

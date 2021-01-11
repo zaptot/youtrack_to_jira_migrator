@@ -14,7 +14,7 @@ module Youtrack::Synchronizers::Loaders::User
         created_at: Time.now,
         updated_at: Time.now
       }
-    end
+    end.compact
 
     return if data_to_insert.blank?
 
