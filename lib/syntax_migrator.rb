@@ -36,7 +36,7 @@ class SyntaxMigrator
       images_to_migrate = text.scan(%r{(!\[\]\(.*\))}).to_a.flatten.compact.uniq
 
       images_to_migrate.each do |image|
-        jira_syntax_image = image.gsub('[](', '').gsub(')', '!')
+        jira_syntax_image = image.gsub('[](', '').gsub(')', '|width=90%!')
         text.gsub!(image, jira_syntax_image)
       end
     end
@@ -66,7 +66,7 @@ class SyntaxMigrator
 
     def add_attachments(text, attachments)
       attachments.each do |attach|
-        text << "[^#{attach}]"
+        text << "\n[^#{attach}]"
       end
     end
   end

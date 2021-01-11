@@ -23,6 +23,10 @@ ActiveAdmin.register Project do
       row :youtrack_url
       row :youtrack_token
       row :state
+      row :workflow_name
+      row :needed_states_in_workflow do
+        resource.issues.system_field_values('State')
+      end
       row :created_at
       row :updated_at
     end

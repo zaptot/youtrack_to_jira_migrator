@@ -41,10 +41,13 @@ class IssueSerializer < ActiveModel::Serializer
 
   def customFieldValues
     object.custom_fields_without_system.map do |field|
+      value = transform_custom_field_value(field)
+      type = transform_custom_field_type(field['type'], value)
+
       {
         fieldName: field['field_name'],
-        fieldType: CUSTOM_FIELDS_TYPE_MAPPINGS[field['type']] || DEFAULT_JIRA_TYPE,
-        value: transform_custom_field_value(field)
+        fieldType: type,
+        value: value
       }
     end
   end
@@ -59,6 +62,14 @@ class IssueSerializer < ActiveModel::Serializer
       "PT#{field['value']}M"
     else
       field['value']
+    end
+  end
+
+  def transform_custom_field_type(type, value)
+    if type == 'SimpleIssueCustomField' && (value.is_a?(Float) || value.is_a?(Integer))
+      'com.atlassian.jira.plugin.system.customfieldtypes:float'
+    else
+      CUSTOM_FIELDS_TYPE_MAPPINGS[type] || DEFAULT_JIRA_TYPE
     end
   end
 end
