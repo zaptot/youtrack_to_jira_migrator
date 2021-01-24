@@ -21,4 +21,6 @@ class Comment < ApplicationRecord
   belongs_to :jira_user
   belongs_to :issue
   has_many :attachments, dependent: :destroy
+
+  scope :for_project, ->(project_id) { where(project_id: project_id) }
 end

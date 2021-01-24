@@ -18,5 +18,9 @@ module Youtrack
     def sync_worklogs
       Synchronizers::Worklogs.sync(client, id)
     end
+
+    def sync_histories
+      Synchronizers::Histories.sync(client, id)
+    end
   end
 end

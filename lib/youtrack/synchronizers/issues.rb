@@ -9,8 +9,9 @@ module Youtrack::Synchronizers
       load_links(data_to_load[:links])
       load_attachments(data_to_load[:attachments])
       project.sync_issues!
-    rescue
+    rescue => e
       project.fail!
+      raise e
     end
 
     private

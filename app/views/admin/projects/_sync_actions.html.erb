@@ -1,5 +1,6 @@
 <%= button_to 'Sync Project Issues', sync_issues_admin_project_path(resource) unless resource.processing? %>
-<%= button_to 'Sync Project Worklogs', sync_worklogs_admin_project_path(resource) if resource.can_sync_worklogs? %>
+<%= button_to 'Sync Project Worklogs', sync_worklogs_admin_project_path(resource) if resource.can_sync_additional_info? %>
+<%= button_to 'Sync Project Histories', sync_histories_admin_project_path(resource) if resource.can_sync_additional_info? %>
 
 <% if resource.state.in?(Project::SUCCESS_STATES) %>
   <%= button_to 'Download import file', download_import_admin_project_path(resource), method: :get %>

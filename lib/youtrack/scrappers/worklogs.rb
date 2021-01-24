@@ -2,9 +2,7 @@
 
 module Youtrack::Scrappers
   class Worklogs < Base
-    attr_reader :client, :issue
-
-    API_PATH = 'workItems'.freeze
+    API_PATH = 'workItems'
 
     # date - The date and time that is assigned to the work item.
     # created - The date when the work item was created.

@@ -15,7 +15,34 @@ class SyntaxMigrator
       text
     end
 
+    def normalized_history_values(field_name, value)
+      return value if value.blank?
+
+      case field_name.downcase
+      when 'due date'
+        Time.at(value.to_i / 1000).strftime('%d/%b/%y')
+      when 'status'
+        value.titleize
+      when 'estimation', 'spent time'
+        minutes_to_period(value)
+      else
+        value
+      end
+    end
+
     private
+
+    def minutes_to_period(number_of_minutes)
+      return '' if number_of_minutes.to_i < 1
+
+      weeks = ->(minutes) { "#{minutes.minutes / (5 * 8).hours}w" }
+      days = ->(minutes) { "#{(minutes.minutes % (5 * 8).hours) / 8.hours}d" }
+      hours = ->(minutes) { "#{(minutes.minutes % 8.hours) / 1.hour}h" }
+      minutes = ->(minutes) { "#{minutes.minutes % 1.hour}m" }
+      [weeks, days, hours, minutes].map { |period| period.call(number_of_minutes.to_i) }
+                                   .reject { |period| period =~ /0[wdhm]{1}/ }
+                                   .join(' ')
+    end
 
     def migrate_code_blocks(text)
       text.gsub!('```', '{code}')

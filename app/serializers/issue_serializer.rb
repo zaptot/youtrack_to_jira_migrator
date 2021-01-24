@@ -2,7 +2,7 @@
 
 class IssueSerializer < ActiveModel::Serializer
   attributes :description, :reporter, :assignee, :customFieldValues, :status, :key,
-             :resolution, :watchers, :voters, fix_versions: :fixedVersions,
+             :resolution, :watchers, :voters, :history, fix_versions: :fixedVersions,
              title: :summary, tags: :labels, number_in_project: :externalId,
              created_at: :created, type: :issueType, estimate: :originalEstimate,
              resolved: :resolutionDate
@@ -50,6 +50,13 @@ class IssueSerializer < ActiveModel::Serializer
         value: value
       }
     end
+  end
+
+  def history
+    ActiveModel::ArraySerializer.new(
+      object.issue_histories,
+      each_serializer: IssueHistorySerializer
+    ).serializable_array
   end
 
   private

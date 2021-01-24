@@ -32,7 +32,8 @@ module Jira
         Project.where(id: project_id).preload(issues: [:jira_user,
                                                        comments: [:jira_user, :attachments],
                                                        attachments: :project,
-                                                       worklogs: :jira_user]),
+                                                       worklogs: :jira_user,
+                                                       issue_histories: :jira_user]),
         each_serializer: ProjectSerializer
       ).serializable_array
     end

@@ -6,8 +6,9 @@ module Youtrack::Synchronizers
       load_users(data_to_load[:users])
       load_worklogs(data_to_load[:worklogs])
       project.sync_worklogs!
-    rescue
+    rescue => e
       project.fail!
+      raise e
     end
 
     private

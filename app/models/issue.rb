@@ -37,6 +37,7 @@ class Issue < ApplicationRecord
     has_many :attachments
     has_many :comments
     has_many :worklogs
+    has_many :issue_histories
   end
 
   scope :for_project, ->(project_id) { where(project_id: project_id) }
@@ -52,7 +53,7 @@ class Issue < ApplicationRecord
   end
 
   def status
-    custom_field_by_name('State')&.dig('value')
+    SyntaxMigrator.normalized_history_values('status', custom_field_by_name('State')&.dig('value'))
   end
 
   def fix_versions

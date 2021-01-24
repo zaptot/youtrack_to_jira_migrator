@@ -2,8 +2,6 @@
 
 module Youtrack::Scrappers
   class Issues < Base
-    attr_reader :client, :issue
-
     API_PATH = 'issues'
     ATTRIBUTES_PARAMS = {
       fields: %w[

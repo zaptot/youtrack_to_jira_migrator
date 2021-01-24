@@ -25,7 +25,7 @@ ActiveAdmin.register Project do
       row :state
       row :workflow_name
       row :needed_states_in_workflow do
-        resource.issues.system_field_values('State')
+        controller.all_available_statuses
       end
       row :created_at
       row :updated_at
@@ -33,6 +33,18 @@ ActiveAdmin.register Project do
 
     panel 'Actions' do
       render partial: 'sync_actions'
+    end
+  end
+
+  controller do
+    def all_available_statuses
+      states = resource.issues.system_field_values('State')
+      states += IssueHistory.for_project(resource.id)
+                            .where(field_name: 'status')
+                            .pluck(:from_string, :to_string)
+                            .flatten
+                            .uniq
+      states.uniq.reject(&:blank?).map { |state| SyntaxMigrator.normalized_history_values('status', state) }
     end
   end
 
@@ -48,6 +60,14 @@ ActiveAdmin.register Project do
     resource.start_sync_worklogs!
 
     WorklogsSyncerJob.perform_async(resource.id)
+
+    redirect_to resource_path(resource)
+  end
+
+  member_action :sync_histories, method: :post do
+    resource.start_sync_histories!
+
+    HistoriesSyncerJob.perform_async(resource.id)
 
     redirect_to resource_path(resource)
   end
