@@ -276,7 +276,7 @@ PLATFORMS
 
 DEPENDENCIES
   aasm
-  active_model_serializers
+  active_model_serializers (~> 0.8.4)
   activeadmin
   annotate
   bootsnap (>= 1.4.2)
