@@ -6,7 +6,7 @@ module Youtrack::Scrappers
 
     API_PATH = 'api_path'
     ATTRIBUTES_PARAMS = {}.freeze
-    PAGINATE_SIZE = 500
+    PAGINATE_SIZE = 5_000
 
     class << self
       def scrape(client, project_id)
