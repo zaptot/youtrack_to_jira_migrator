@@ -13,7 +13,7 @@ module Youtrack
       Rails.logger.info("YOUTRACK CLIENT REQUEST: path: #{path}, params: #{params}")
       curl = Curl::Easy.new(generate_url(path, params).to_s)
       curl.headers = headers
-      curl.timeout = 200
+      curl.timeout = 500
       curl.perform
       validate_response(curl)
 

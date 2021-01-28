@@ -25,6 +25,10 @@ module Youtrack::Scrappers
       def project_params(project_id)
         { issueQuery: "project:#{project_id}" }
       end
+
+      def paginate_size
+        15_000
+      end
     end
   end
 end
