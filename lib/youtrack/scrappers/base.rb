@@ -10,12 +10,18 @@ module Youtrack::Scrappers
 
     class << self
       def scrape(client, project_id)
-        1.step.with_object([]) do |page, result|
+        histories = []
+        1.step do |page|
           response = JSON(client.get([self::API_PATH], params: request_params(project_id, page)).body_str)
-          result << response
+          histories << response
 
-          break result.flatten if response.size < paginate_size
+          break if response.size < paginate_size
         end
+      rescue => e
+        # youtrack cannot return too old issue activities cause of timeout
+        Rails.logger.info("NOT ALL HISTORIES DOWNLOADED!!! ERROR MESSAGE: #{e.message}")
+      ensure
+        histories.flatten
       end
 
       protected

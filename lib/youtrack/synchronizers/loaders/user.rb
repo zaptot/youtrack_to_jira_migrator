@@ -4,7 +4,7 @@ module Youtrack::Synchronizers::Loaders::User
   module_function
 
   def load(project_id, users)
-    data_to_insert = users.map do |user|
+    data_to_insert = users.uniq(&:email).map do |user|
       next if user.email.blank? || user.full_name.blank?
 
       {

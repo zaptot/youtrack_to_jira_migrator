@@ -27,7 +27,7 @@ module Youtrack::Scrappers
       end
 
       def paginate_size
-        15_000
+        5_000
       end
     end
   end

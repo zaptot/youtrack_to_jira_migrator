@@ -31,15 +31,15 @@ module Youtrack::Synchronizers
     end
 
     def load_users(users)
-      Loaders::User.load(project_id, users.uniq(&:email))
+      Loaders::User.load(project_id, users)
     end
 
     def load_issues(issues)
-      Loaders::Issue.load(project_id, issues.uniq)
+      Loaders::Issue.load(project_id, issues)
     end
 
     def load_comments(comments)
-      Loaders::Comment.load(project_id, comments.uniq)
+      Loaders::Comment.load(project_id, comments)
     end
 
     def load_attachments(attachments)
@@ -47,7 +47,7 @@ module Youtrack::Synchronizers
     end
 
     def load_links(links)
-      Loaders::Link.load(project_id, links.uniq(&:attrs))
+      Loaders::Link.load(project_id, links)
     end
   end
 end

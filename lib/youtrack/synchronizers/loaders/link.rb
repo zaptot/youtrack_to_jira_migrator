@@ -5,7 +5,7 @@ module Youtrack::Synchronizers::Loaders::Link
 
   def load(project_id, links)
     data_to_insert = []
-    links.each do |link|
+    links.uniq(&:attrs).each do |link|
       link.issues_to.each do |issue_to|
         next unless available_projects.include?(issue_to.project_id)
         next unless issues(issue_to.project_id)[issue_to.id].present?
