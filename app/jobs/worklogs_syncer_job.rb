@@ -1,8 +1,10 @@
 class WorklogsSyncerJob
   include SuckerPunch::Job
-  workers 4
+  workers 1
 
   def perform(project_id)
-    Youtrack::Synchronizer.new(project_id).sync_worklogs
+    ActiveRecord::Base.connection_pool.with_connection do
+      Youtrack::Synchronizer.new(project_id).sync_worklogs
+    end
   end
 end
