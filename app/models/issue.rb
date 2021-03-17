@@ -33,7 +33,7 @@ class Issue < ApplicationRecord
   end
 
   with_options dependent: :destroy do
-    has_many :links, foreign_key: :issue_from_id
+    has_many :links, -> { where.not(issue_to_id: nil) }, foreign_key: :issue_from_id
     has_many :attachments
     has_many :comments
     has_many :worklogs
