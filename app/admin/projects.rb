@@ -8,6 +8,7 @@ ActiveAdmin.register Project do
   end
 
   index do
+    selectable_column
     column :id
     column :full_name
     column :youtrack_url
@@ -35,6 +36,12 @@ ActiveAdmin.register Project do
       render partial: 'sync_actions'
     end
   end
+
+  filter :id
+  filter :full_name
+  filter :workflow_name
+  filter :youtrack_url
+  filter :youtrack_token
 
   controller do
     def all_available_statuses
@@ -78,9 +85,10 @@ ActiveAdmin.register Project do
     send_file file, type: 'application/json'
   end
 
-  filter :id
-  filter :full_name
-  filter :workflow_name
-  filter :youtrack_url
-  filter :youtrack_token
+  batch_action :destroy, false
+  batch_action :download_batch_import_file do |ids|
+    file = Jira::ImportGenerator.generate(ids)
+
+    send_file file, type: 'application/json'
+  end
 end
