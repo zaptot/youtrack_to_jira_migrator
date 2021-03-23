@@ -5,17 +5,20 @@ module Youtrack::Synchronizers::Loaders::Link
 
   def load(project_id, links)
     data_to_insert = []
+    available_projects = Project.pluck(:id)
+    issues = {}
+
     links.uniq(&:attrs).each do |link|
       link.issues_to.each do |issue_to|
         next unless available_projects.include?(issue_to.project_id)
-        next unless issues(issue_to.project_id)[issue_to.id].present?
+        next unless issues(issues, issue_to.project_id)[issue_to.id].present?
 
         issue_from, issue_to = calculate_issues_order(link, issue_to, link.parent_issue_id, project_id)
 
         data_to_insert << {
           type: link.type,
-          issue_from_id: issues(issue_from.project_id)[issue_from.id].id,
-          issue_to_id: issues(issue_to.project_id)[issue_to.id].id,
+          issue_from_id: issues(issues, issue_from.project_id)[issue_from.id].id,
+          issue_to_id: issues(issues, issue_to.project_id)[issue_to.id].id,
           created_at: Time.now,
           updated_at: Time.now,
           project_from_id: issue_from.project_id,
@@ -29,13 +32,8 @@ module Youtrack::Synchronizers::Loaders::Link
     Link.insert_all(data_to_insert, unique_by: %i[type issue_from_id issue_to_id])
   end
 
-  def issues(project)
-    @issues ||= {}
-    @issues[project] ||= Issue.for_project(project).group_by(&:number_in_project).transform_values(&:first)
-  end
-
-  def available_projects
-    @available_projects ||= Project.pluck(:id)
+  def issues(issues, project)
+    issues[project] ||= Issue.for_project(project).group_by(&:number_in_project).transform_values(&:first)
   end
 
   def calculate_issues_order(link, issue_to, parent_issue_id, parent_project_id)

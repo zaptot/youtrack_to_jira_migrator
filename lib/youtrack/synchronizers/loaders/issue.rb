@@ -4,6 +4,8 @@ module Youtrack::Synchronizers::Loaders::Issue
   module_function
 
   def load(project_id, issues)
+    users = users(project_id)
+
     data_to_insert = issues.map do |issue|
       {
         number_in_project: issue.id,
@@ -13,7 +15,7 @@ module Youtrack::Synchronizers::Loaders::Issue
         title: issue.title,
         description: issue.description,
         custom_fields: issue.json_custom_fields.select { |field| field[:value].present? },
-        jira_user_id: users(project_id)[issue.author.email].id,
+        jira_user_id: users[issue.author.email].id,
         project_id: project_id,
         tags: issue.tags,
         created_at: issue.created_at || Time.now,
@@ -27,6 +29,6 @@ module Youtrack::Synchronizers::Loaders::Issue
   end
 
   def users(project)
-    @users ||= JiraUser.for_project(project).group_by(&:email).transform_values(&:first)
+    JiraUser.for_project(project).group_by(&:email).transform_values(&:first)
   end
 end
