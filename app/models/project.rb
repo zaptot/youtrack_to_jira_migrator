@@ -26,6 +26,7 @@ class Project < ApplicationRecord
     has_many :issues
     has_many :jira_users
     has_many :comments
+    has_many :delayed_imports
   end
 
   enum state: AVAILABLE_STATES.map { |status| [status, status] }.to_h

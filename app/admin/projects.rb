@@ -35,6 +35,19 @@ ActiveAdmin.register Project do
     panel 'Actions' do
       render partial: 'sync_actions'
     end
+
+    table_for(resource.delayed_imports.not_deleted) do
+      column :id
+      column :name
+      column :state
+      column :updated_at
+      column :created_at
+      column :actions do |delay|
+        if delay.finished?
+          link_to :download, download_import_admin_project_path(delay_id: delay.id, resource_id: resource.id)
+        end
+      end
+    end
   end
 
   filter :id
@@ -79,16 +92,19 @@ ActiveAdmin.register Project do
     redirect_to resource_path(resource)
   end
 
-  member_action :download_import, method: :get do
-    file = Jira::ImportGenerator.generate(resource.id)
+  member_action :generate_import, method: :post do
+    Jira::ImportGenerateDelayer.new(resource).enqueue
 
-    send_file file, type: 'application/json'
+    redirect_back(notice: 'Import delayed!', fallback_location: resource_path)
   end
 
-  batch_action :destroy, false
-  batch_action :download_batch_import_file do |ids|
-    file = Jira::ImportGenerator.generate(ids)
-
-    send_file file, type: 'application/json'
+  member_action :download_import, method: :get do
+    delay = DelayedImport.find_by(id: params[:delay_id])
+    if File.exist?(Rails.root.join(delay.file_path))
+      send_file delay.file_path, type: 'application/json'
+    else
+      delay.mark_as_deleted! unless delay.deleted?
+      redirect_back(notice: 'File not found!', fallback_location: resource_path(params[:id]))
+    end
   end
 end

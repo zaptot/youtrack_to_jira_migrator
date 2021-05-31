@@ -3,5 +3,5 @@
 <%= button_to 'Sync Project Histories', sync_histories_admin_project_path(resource) if resource.can_sync_additional_info? %>
 
 <% if resource.state.in?(Project::SUCCESS_STATES) %>
-  <%= button_to 'Download import file', download_import_admin_project_path(resource), method: :get %>
+  <%= button_to 'Generate import file', generate_import_admin_project_path(resource), method: :post %>
 <% end %>
