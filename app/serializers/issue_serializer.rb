@@ -36,7 +36,7 @@ class IssueSerializer < ActiveModel::Serializer
   end
 
   def description
-    SyntaxMigrator.migrate_text_to_jira_syntax(object.description, object.project_id)
+    SyntaxMigrator.migrate_text_to_jira_syntax(object.description, object.project)
   end
 
   def customFieldValues

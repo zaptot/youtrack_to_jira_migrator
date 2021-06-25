@@ -10,6 +10,7 @@
 #  updated_at     :datetime         not null
 #  workflow_name  :string
 #  state          :string
+#  jira_url       :string
 #
 # Indexes
 #
@@ -68,12 +69,6 @@ class Project < ApplicationRecord
     event :fail do
       transitions from: %i[processing_worklogs processing_issues processing_histories created], to: :failed
     end
-  end
-
-  def self.youtrack_url_by_project(project_id)
-    @youtrack_url_by_project ||= {}
-    @youtrack_url_by_project[project_id] ||= Project.find(project_id).youtrack_url
-    @youtrack_url_by_project[project_id]
   end
 
   def processing?

@@ -29,7 +29,7 @@ class Issue < ApplicationRecord
 
   with_options required: true do
     belongs_to :jira_user
-    belongs_to :project
+    belongs_to :project, inverse_of: :issues
   end
 
   with_options dependent: :destroy do

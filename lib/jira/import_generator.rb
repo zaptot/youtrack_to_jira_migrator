@@ -24,10 +24,11 @@ module Jira
     def projects
       ActiveModel::ArraySerializer.new(
         Project.where(id: project_id).preload(issues: [:jira_user,
-                                                       comments: [:jira_user, :attachments],
+                                                       :project,
+                                                       comments: [:jira_user, :attachments, :project],
                                                        attachments: :project,
-                                                       worklogs: :jira_user,
-                                                       issue_histories: :jira_user]),
+                                                       worklogs: [:jira_user, :project],
+                                                       issue_histories: [:jira_user, :project]]),
         each_serializer: ProjectSerializer
       ).serializable_array
     end
