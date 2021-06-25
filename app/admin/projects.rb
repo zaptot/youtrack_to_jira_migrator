@@ -25,6 +25,7 @@ ActiveAdmin.register Project do
       row :youtrack_token
       row :state
       row :workflow_name
+      row :jira_url
       row :needed_states_in_workflow do
         controller.all_available_statuses
       end
