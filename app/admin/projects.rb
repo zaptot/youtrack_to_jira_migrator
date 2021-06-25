@@ -2,7 +2,7 @@ ActiveAdmin.register Project do
   form partial: 'form'
 
   permit_params do
-    fields = %i[full_name youtrack_token youtrack_url workflow_name]
+    fields = %i[full_name youtrack_token youtrack_url workflow_name jira_url]
     fields << :id if params[:action].in?(%w[create new])
     fields
   end
@@ -13,6 +13,7 @@ ActiveAdmin.register Project do
     column :full_name
     column :youtrack_url
     column :state
+    column :jira_url
 
     actions
   end

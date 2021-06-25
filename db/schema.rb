@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_31_092913) do
+ActiveRecord::Schema.define(version: 2021_06_25_142831) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -131,6 +131,7 @@ ActiveRecord::Schema.define(version: 2021_05_31_092913) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "workflow_name"
     t.string "state"
+    t.string "jira_url"
     t.index ["id"], name: "index_projects_on_id"
   end
 

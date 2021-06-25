@@ -2,14 +2,15 @@
 
 class SyntaxMigrator
   class << self
-    def migrate_text_to_jira_syntax(text, project_id, attachments_names = [])
+    def migrate_text_to_jira_syntax(text, project, attachments_names = [])
       text = text.to_s
       migrate_code_blocks(text)
       migrate_one_code_lines(text)
-      migrate_user_mentions(text, project_id)
+      migrate_user_mentions(text, project.id)
       migrate_images(text)
       migrate_files(text)
-      migrate_urls(text, project_id)
+      migrate_youtrack_urls(text, project)
+      migrate_named_urls(text)
       add_attachments(text, attachments_names)
 
       text
@@ -60,7 +61,7 @@ class SyntaxMigrator
     end
 
     def migrate_images(text)
-      images_to_migrate = text.scan(%r{(!\[\]\(.*\))}).to_a.flatten.compact.uniq
+      images_to_migrate = text.scan(%r{(!\[\]\(.*?\))}).to_a.flatten.compact.uniq
 
       images_to_migrate.each do |image|
         jira_syntax_image = image.gsub('[](', '').gsub(')', '|width=90%!')
@@ -69,7 +70,7 @@ class SyntaxMigrator
     end
 
     def migrate_files(text)
-      files_to_migrate = text.scan(%r{(\[file:.*\])}).to_a.flatten.compact.uniq
+      files_to_migrate = text.scan(%r{(\[file:.*?\])}).to_a.flatten.compact.uniq
 
       files_to_migrate.each do |file|
         jira_syntax_file = file.gsub('file:', '^')
@@ -78,16 +79,27 @@ class SyntaxMigrator
       end
     end
 
-    def migrate_urls(text, project_id)
-      url_base = Project.youtrack_url_by_project(project_id)
-      urls_to_replace = text.scan(%r{(#{url_base}\S*)}).to_a.flatten.compact.uniq
+    def migrate_youtrack_urls(text, project)
+      url_base = project.youtrack_url
+      jira_url = project.jira_url
+      urls_to_replace = text.scan(%r{(#{url_base})(\S*)}).to_a.compact.uniq
       issue_id_from_url = ->(url) { url[%r{\/(\w*-\d*)}, 1] }
 
-      urls_to_replace.each do |url|
-        issue_id = issue_id_from_url.call(url)
+      urls_to_replace.each do |url_base, url_path|
+        issue_id = issue_id_from_url.call(url_path)
         next if issue_id.blank?
 
-        text.gsub!(url, issue_id)
+        text.gsub!([url_base, url_path].join, File.join(jira_url, 'browse', issue_id))
+      end
+    end
+
+    def migrate_named_urls(text)
+      urls_with_names = text.scan(%r{\[(\S+?)\]\((\S+?)\)}).to_a.compact.uniq
+
+      urls_with_names.each do |name, url|
+        old_url = "[#{name}](#{url})"
+        new_url = "[#{name}|#{url}]"
+        text.gsub!(old_url, new_url)
       end
     end
 
