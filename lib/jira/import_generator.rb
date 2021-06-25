@@ -2,27 +2,21 @@
 
 module Jira
   class ImportGenerator
-    attr_accessor :project_id
+    attr_accessor :delay, :project_id
 
     class << self
-      def generate(project_id)
-        new(project_id).generate
+      def generate(delay_id)
+        new(delay_id).generate
       end
     end
 
-    def initialize(project_id)
-      @project_id = project_id
+    def initialize(delay_id)
+      @delay = DelayedImport.find(delay_id)
+      @project_id = delay.project_id
     end
 
     def generate
-      res = {
-        users: users,
-        links: links,
-        projects: projects
-      }.to_json
-
-      File.open(file_path, 'w') { |file| file.write(res) }
-      file_path
+      finish_import_generator!(users: users, links: links, projects: projects)
     end
 
     private
@@ -53,9 +47,9 @@ module Jira
       ).serializable_array
     end
 
-    def file_path
-      file_name = "#{project_id}_import_#{Time.now}.json"
-      Rails.root.join("tmp/#{file_name}")
+    def finish_import_generator!(import_data)
+      File.open(delay.file_path, 'w') { |file| file.write(import_data.to_json) }
+      delay.finish!
     end
   end
 end
