@@ -8,6 +8,6 @@ class CommentSerializer < ActiveModel::Serializer
   end
 
   def body
-    SyntaxMigrator.migrate_text_to_jira_syntax(object.body, object.project_id, object.attachments.pluck(:name))
+    SyntaxMigrator.migrate_text_to_jira_syntax(object.body, object.project, object.attachments.pluck(:name))
   end
 end

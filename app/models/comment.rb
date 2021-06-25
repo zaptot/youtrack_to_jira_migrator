@@ -18,6 +18,7 @@
 #  uniq_comments_index             (project_id,issue_id,jira_user_id,created_at) UNIQUE
 #
 class Comment < ApplicationRecord
+  belongs_to :project, inverse_of: :comments
   belongs_to :jira_user
   belongs_to :issue
   has_many :attachments, dependent: :destroy

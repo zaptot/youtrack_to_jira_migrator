@@ -8,6 +8,6 @@ class WorklogSerializer < ActiveModel::Serializer
   end
 
   def comment
-    SyntaxMigrator.migrate_text_to_jira_syntax(object.text, object.project_id)
+    SyntaxMigrator.migrate_text_to_jira_syntax(object.text, object.project)
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_14_200658) do
+ActiveRecord::Schema.define(version: 2021_06_25_142831) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -55,6 +55,16 @@ ActiveRecord::Schema.define(version: 2021_01_14_200658) do
     t.index ["jira_user_id"], name: "index_comments_on_jira_user_id"
     t.index ["project_id", "issue_id", "jira_user_id", "created_at"], name: "uniq_comments_index", unique: true
     t.index ["project_id"], name: "index_comments_on_project_id"
+  end
+
+  create_table "delayed_imports", force: :cascade do |t|
+    t.string "name"
+    t.string "file_path"
+    t.string "state"
+    t.string "project_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["project_id"], name: "index_delayed_imports_on_project_id"
   end
 
   create_table "issue_histories", force: :cascade do |t|
@@ -121,6 +131,7 @@ ActiveRecord::Schema.define(version: 2021_01_14_200658) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "workflow_name"
     t.string "state"
+    t.string "jira_url"
     t.index ["id"], name: "index_projects_on_id"
   end
 
