@@ -12,6 +12,7 @@ class SyntaxMigrator
       migrate_youtrack_urls(text, project)
       migrate_named_urls(text)
       add_attachments(text, attachments_names)
+      migrate_lists(text)
 
       text
     end
@@ -107,6 +108,10 @@ class SyntaxMigrator
       attachments.each do |attach|
         text << "\n[^#{attach}]"
       end
+    end
+
+    def migrate_lists(text)
+      text.gsub!(/((?:[1-9]+\.|[*-])[\s\S]+?)(?:\n\n|\z)/, '{code}\1{code}')
     end
   end
 end
