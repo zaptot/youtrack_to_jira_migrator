@@ -12,6 +12,8 @@ class SyntaxMigrator
       migrate_youtrack_urls(text, project)
       migrate_named_urls(text)
       add_attachments(text, attachments_names)
+      migrate_character_formatting(text)
+      migrate_headings(text)
 
       text
     end
@@ -100,6 +102,21 @@ class SyntaxMigrator
         old_url = "[#{name}](#{url})"
         new_url = "[#{name}|#{url}]"
         text.gsub!(old_url, new_url)
+      end
+    end
+
+    def migrate_character_formatting(text)
+      text.gsub!('**', '§§§').gsub!('*','_').gsub!('§§§','*').gsub!('~~', '-')
+    end
+
+    def migrate_headings(text)
+      if text.match?(/^#/)
+        level = text.scan(/^#+/).first.length
+        text.gsub!(/^#{Regexp.escape('#'*level)}/, "h#{level}")
+      end
+
+      6.downto(1) do |h|
+        text.gsub!(/\\n#{Regexp.escape('#'*h)}/, "\nh#{h}")
       end
     end
 
