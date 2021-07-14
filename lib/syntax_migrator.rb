@@ -12,6 +12,8 @@ class SyntaxMigrator
       migrate_youtrack_urls(text, project)
       migrate_named_urls(text)
       add_attachments(text, attachments_names)
+      migrate_character_formatting(text)
+      migrate_headings(text)
       migrate_tables(text)
       migrate_block_quotes(text)
       migrate_check_lists(text)
@@ -107,16 +109,25 @@ class SyntaxMigrator
       end
     end
 
+    def migrate_character_formatting(text)
+      text.gsub!('**', '§§§').gsub!('*','_').gsub!('§§§','*').gsub!('~~', '-')
+    end
+
+    def migrate_headings(text)
+      if text.match?(/^#/)
+        level = text.scan(/^#+/).first.length
+        text.gsub!(/^#{Regexp.escape('#'*level)}/, "h#{level}")
+      end
+
+      6.downto(1) do |h|
+        text.gsub!(/\\n#{Regexp.escape('#'*h)}/, "\nh#{h}")
+      end
+    end
+
     def migrate_tables(text)
       text.scan(%r{(^(\|:{0,1}-+:{0,1})+\|$)}).each do |full_row, _|
         text.gsub!("#{full_row}\n", '')
         text.gsub!(full_row, '')
-      end
-    end
-
-    def migrate_block_quotes(text)
-      text.scan(%r{(^\s*>\s*(.*))}).each do |full_block, block_text|
-        text.gsub
       end
     end
 
