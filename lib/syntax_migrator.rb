@@ -12,6 +12,9 @@ class SyntaxMigrator
       migrate_youtrack_urls(text, project)
       migrate_named_urls(text)
       add_attachments(text, attachments_names)
+      migrate_tables(text)
+      migrate_block_quotes(text)
+      migrate_check_lists(text)
 
       text
     end
@@ -51,6 +54,7 @@ class SyntaxMigrator
 
     def migrate_one_code_lines(text)
       text.gsub!('`', '{noformat}')
+      text.gsub!('``', '{noformat}')
     end
 
     def migrate_user_mentions(text, project_id)
@@ -101,6 +105,24 @@ class SyntaxMigrator
         new_url = "[#{name}|#{url}]"
         text.gsub!(old_url, new_url)
       end
+    end
+
+    def migrate_tables(text)
+      text.scan(%r{(^(\|:{0,1}-+:{0,1})+\|$)}).each do |full_row, _|
+        text.gsub!("#{full_row}\n", '')
+        text.gsub!(full_row, '')
+      end
+    end
+
+    def migrate_block_quotes(text)
+      text.scan(%r{(^\s*>\s*(.*))}).each do |full_block, block_text|
+        text.gsub
+      end
+    end
+
+    def migrate_check_lists(text)
+      text.gsub!('- [ ]', '(-)')
+      text.gsub!('- [x]', '(+)')
     end
 
     def add_attachments(text, attachments)
