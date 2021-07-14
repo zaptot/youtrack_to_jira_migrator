@@ -12,6 +12,11 @@ class SyntaxMigrator
       migrate_youtrack_urls(text, project)
       migrate_named_urls(text)
       add_attachments(text, attachments_names)
+      migrate_character_formatting(text)
+      migrate_headings(text)
+      migrate_tables(text)
+      migrate_block_quotes(text)
+      migrate_check_lists(text)
       migrate_lists(text)
 
       text
@@ -52,6 +57,7 @@ class SyntaxMigrator
 
     def migrate_one_code_lines(text)
       text.gsub!('`', '{noformat}')
+      text.gsub!('``', '{noformat}')
     end
 
     def migrate_user_mentions(text, project_id)
@@ -102,6 +108,33 @@ class SyntaxMigrator
         new_url = "[#{name}|#{url}]"
         text.gsub!(old_url, new_url)
       end
+    end
+
+    def migrate_character_formatting(text)
+      text.gsub!('**', '§§§').gsub!('*','_').gsub!('§§§','*').gsub!('~~', '-')
+    end
+
+    def migrate_headings(text)
+      if text.match?(/^#/)
+        level = text.scan(/^#+/).first.length
+        text.gsub!(/^#{Regexp.escape('#'*level)}/, "h#{level}")
+      end
+
+      6.downto(1) do |h|
+        text.gsub!(/\\n#{Regexp.escape('#'*h)}/, "\nh#{h}")
+      end
+    end
+
+    def migrate_tables(text)
+      text.scan(%r{(^(\|:{0,1}-+:{0,1})+\|$)}).each do |full_row, _|
+        text.gsub!("#{full_row}\n", '')
+        text.gsub!(full_row, '')
+      end
+    end
+
+    def migrate_check_lists(text)
+      text.gsub!('- [ ]', '(-)')
+      text.gsub!('- [x]', '(+)')
     end
 
     def add_attachments(text, attachments)
