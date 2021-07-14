@@ -14,6 +14,9 @@ class SyntaxMigrator
       add_attachments(text, attachments_names)
       migrate_character_formatting(text)
       migrate_headings(text)
+      migrate_tables(text)
+      migrate_block_quotes(text)
+      migrate_check_lists(text)
 
       text
     end
@@ -53,6 +56,7 @@ class SyntaxMigrator
 
     def migrate_one_code_lines(text)
       text.gsub!('`', '{noformat}')
+      text.gsub!('``', '{noformat}')
     end
 
     def migrate_user_mentions(text, project_id)
@@ -118,6 +122,18 @@ class SyntaxMigrator
       6.downto(1) do |h|
         text.gsub!(/\\n#{Regexp.escape('#'*h)}/, "\nh#{h}")
       end
+    end
+
+    def migrate_tables(text)
+      text.scan(%r{(^(\|:{0,1}-+:{0,1})+\|$)}).each do |full_row, _|
+        text.gsub!("#{full_row}\n", '')
+        text.gsub!(full_row, '')
+      end
+    end
+
+    def migrate_check_lists(text)
+      text.gsub!('- [ ]', '(-)')
+      text.gsub!('- [x]', '(+)')
     end
 
     def add_attachments(text, attachments)
