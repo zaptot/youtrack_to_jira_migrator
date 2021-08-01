@@ -29,7 +29,8 @@ module Youtrack::Synchronizers::Loaders::Attachment
 
     Comment.find_by(jira_user: users[attachment.comment.author.email],
                     issue: issues(project)[attachment.issue_number_in_project],
-                    body: attachment.comment.body)
+                    body: attachment.comment.body,
+                    created_at: attachment.comment.created_at)
   end
 
   def issues(project)

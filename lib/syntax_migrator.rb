@@ -89,7 +89,7 @@ class SyntaxMigrator
       url_base = project.youtrack_url
       jira_url = project.jira_url
       urls_to_replace = text.scan(%r{(#{url_base})(\S*)}).to_a.compact.uniq
-      issue_id_from_url = ->(url) { url[%r{\/(\w*-\d*)}, 1] }
+      issue_id_from_url = ->(url) { url[%r{[=/](\w*-\d*)($|\?)}, 1] }
 
       urls_to_replace.each do |url_base, url_path|
         issue_id = issue_id_from_url.call(url_path)
@@ -110,7 +110,7 @@ class SyntaxMigrator
     end
 
     def migrate_character_formatting(text)
-      text.gsub!('**', '§§§').gsub!('*','_').gsub!('§§§','*').gsub!('~~', '-')
+      text.gsub!('**', '§§§').gsub!('*', '_').gsub!('§§§', '*').gsub!('~~', '-')
     end
 
     def migrate_headings(text)
