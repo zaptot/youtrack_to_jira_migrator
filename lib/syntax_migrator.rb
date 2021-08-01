@@ -17,6 +17,7 @@ class SyntaxMigrator
       migrate_tables(text)
       migrate_block_quotes(text)
       migrate_check_lists(text)
+      migrate_lists(text)
 
       text
     end
@@ -140,6 +141,10 @@ class SyntaxMigrator
       attachments.each do |attach|
         text << "\n[^#{attach}]"
       end
+    end
+
+    def migrate_lists(text)
+      text.gsub!(/((?:[1-9]+\.|[*-])[\s\S]+?)(?:\n\n|\z)/, '{code}\1{code}')
     end
   end
 end
