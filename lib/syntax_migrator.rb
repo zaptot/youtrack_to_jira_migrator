@@ -16,7 +16,6 @@ class SyntaxMigrator
       migrate_headings(text)
       migrate_tables(text)
       migrate_check_lists(text)
-      migrate_lists(text)
 
       text
     end
@@ -89,7 +88,7 @@ class SyntaxMigrator
       url_base = project.youtrack_url
       jira_url = project.jira_url
       urls_to_replace = text.scan(%r{(#{url_base})(\S*)}).to_a.compact.uniq
-      issue_id_from_url = ->(url) { url[%r{[=/](\w*-\d*)($|\?)}, 1] }
+      issue_id_from_url = ->(url) { url[%r{[=/]([a-zA-Z]+-\d+)$}, 1] || url[%r{\?issue=([a-zA-Z]+-\d+)}, 1] }
 
       urls_to_replace.each do |url_base, url_path|
         issue_id = issue_id_from_url.call(url_path)
@@ -116,11 +115,11 @@ class SyntaxMigrator
     def migrate_headings(text)
       if text.match?(/^#/)
         level = text.scan(/^#+/).first.length
-        text.gsub!(/^#{Regexp.escape('#'*level)}/, "h#{level}")
+        text.gsub!(/^#{Regexp.escape('#'*level)}/, "h#{level}. ")
       end
 
       6.downto(1) do |h|
-        text.gsub!(/\\n#{Regexp.escape('#'*h)}/, "\nh#{h}")
+        text.gsub!(/\\n#{Regexp.escape('#'*h)}/, "\nh#{h}. ")
       end
     end
 
