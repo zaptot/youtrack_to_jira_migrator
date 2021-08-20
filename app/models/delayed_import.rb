@@ -29,6 +29,7 @@ class DelayedImport < ApplicationRecord
   aasm column: :state, enum: true do
     state :created, initial: true
     state :finished
+    state :failed
     state :deleted
 
     event :finish do
@@ -37,6 +38,10 @@ class DelayedImport < ApplicationRecord
 
     event :mark_as_deleted do
       transitions from: %i[created finished], to: :deleted
+    end
+
+    event :fail do
+      transitions from: %i[created finished], to: :failed
     end
   end
 end

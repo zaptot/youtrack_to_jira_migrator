@@ -17,6 +17,9 @@ module Jira
 
     def generate
       finish_import_generator!(users: users, links: links, projects: projects)
+    rescue => e
+      delay.fail!
+      raise e
     end
 
     private

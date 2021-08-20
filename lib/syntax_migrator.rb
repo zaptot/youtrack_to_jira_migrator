@@ -15,7 +15,6 @@ class SyntaxMigrator
       migrate_character_formatting(text)
       migrate_headings(text)
       migrate_tables(text)
-      migrate_block_quotes(text)
       migrate_check_lists(text)
       migrate_lists(text)
 
@@ -111,7 +110,7 @@ class SyntaxMigrator
     end
 
     def migrate_character_formatting(text)
-      text.gsub!('**', '§§§').gsub!('*', '_').gsub!('§§§', '*').gsub!('~~', '-')
+      [%w[** §§§], %w[* _], %w[§§§ *], %w[~~ -]].each { |from, to| text.gsub!(from, to) }
     end
 
     def migrate_headings(text)
