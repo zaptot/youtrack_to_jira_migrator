@@ -16,8 +16,7 @@ class SyntaxMigrator
       migrate_headings(text)
       migrate_tables(text)
       migrate_check_lists(text)
-
-      text
+      _text = migrate_quotes(text)
     end
 
     def normalized_history_values(field_name, value)
@@ -109,7 +108,7 @@ class SyntaxMigrator
     end
 
     def migrate_character_formatting(text)
-      [%w[** §§§], %w[* _], %w[§§§ *], %w[~~ -]].each { |from, to| text.gsub!(from, to) }
+      [%w[** §§§], %w[§§§ *], %w[~~ -]].each { |from, to| text.gsub!(from, to) }
     end
 
     def migrate_headings(text)
@@ -118,9 +117,7 @@ class SyntaxMigrator
         text.gsub!(/^#{Regexp.escape('#'*level)}/, "h#{level}. ")
       end
 
-      6.downto(1) do |h|
-        text.gsub!(/\\n#{Regexp.escape('#'*h)}/, "\nh#{h}. ")
-      end
+      6.downto(1) { |h| text.gsub!(/^#{'#' * h}/, "h#{h}. ") }
     end
 
     def migrate_tables(text)
@@ -143,6 +140,39 @@ class SyntaxMigrator
 
     def migrate_lists(text)
       text.gsub!(/((?:[1-9]+\.|[*-])[\s\S]+?)(?:\n\n|\z)/, '{code}\1{code}')
+    end
+
+    def migrate_quotes(text)
+      res = []
+      curr_quote = []
+
+      text.lines.each do |line|
+        if line.strip.blank?
+          if curr_quote.any?
+            curr_quote << line
+          else
+            res << line
+          end
+        elsif line.start_with?('> ')
+          curr_quote << line[1..].strip
+        elsif curr_quote.any?
+          res << '{quote}'
+          res += curr_quote
+          res << '{quote}'
+          res << line
+          curr_quote = []
+        else
+          res << line
+        end
+      end
+
+      if curr_quote.any?
+        res << '{quote}'
+        res += curr_quote
+        res << '{quote}'
+      end
+
+      res.join
     end
   end
 end
