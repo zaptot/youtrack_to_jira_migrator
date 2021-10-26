@@ -50,7 +50,7 @@ class SyntaxMigrator
     end
 
     def migrate_code_blocks(text)
-      text.gsub!(/```\s*(\S*)/, '{code:\1}')
+      text.gsub!(/```\s*\S*/, '{code}')
     end
 
     def migrate_one_code_lines(text)
