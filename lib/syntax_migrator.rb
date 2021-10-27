@@ -2,6 +2,10 @@
 
 class SyntaxMigrator
   class << self
+    VALID_CODE_TYPES = %w[actionscript ada applescript bash c c# c++ cpp css erlang go groovy
+                          haskell html java javascript js json lua none nyan objc perl php
+                          python r rainbow ruby scala sh sql swift visualbasic xml yaml].freeze
+
     def migrate_text_to_jira_syntax(text, project, attachments_names = [])
       text = text.to_s
       migrate_code_blocks(text)
@@ -50,7 +54,15 @@ class SyntaxMigrator
     end
 
     def migrate_code_blocks(text)
-      text.gsub!(/```\s*\S*/, '{code}')
+      regexp = /^```[ \f\r\t\v]*(\S*).*$/
+      code_type = text.match(regexp)
+      if code_type && code_type[1].in?(VALID_CODE_TYPES)
+        text.gsub!(regexp, '{code:\1}')
+      elsif code_type && !code_type[1].blank?
+        text.gsub!(regexp, '\1{code}')
+      else
+        text.gsub!(regexp, '{code}')
+      end
     end
 
     def migrate_one_code_lines(text)
@@ -160,8 +172,10 @@ class SyntaxMigrator
             curr_quote = []
           end
           res << line
-        elsif line.start_with?('>') || curr_quote.any?
+        elsif line.start_with?('>')
           curr_quote << line[1..]
+        elsif curr_quote.any?
+          curr_quote << line
         else
           res << line
         end
