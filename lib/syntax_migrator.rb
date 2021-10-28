@@ -2,6 +2,10 @@
 
 class SyntaxMigrator
   class << self
+    VALID_CODE_TYPES = %w[actionscript ada applescript bash c c# c++ cpp css erlang go groovy
+                          haskell html java javascript js json lua none nyan objc perl php
+                          python r rainbow ruby scala sh sql swift visualbasic xml yaml].freeze
+
     def migrate_text_to_jira_syntax(text, project, attachments_names = [])
       text = text.to_s
       migrate_code_blocks(text)
@@ -16,6 +20,7 @@ class SyntaxMigrator
       migrate_headings(text)
       migrate_tables(text)
       migrate_check_lists(text)
+      migrate_bullet_lists(text)
       _text = migrate_quotes(text)
     end
 
@@ -49,12 +54,20 @@ class SyntaxMigrator
     end
 
     def migrate_code_blocks(text)
-      text.gsub!('```', '{code}')
+      regexp = /^```[ \f\r\t\v]*(\S*).*$/
+      code_type = text.match(regexp)
+      if code_type && code_type[1].in?(VALID_CODE_TYPES)
+        text.gsub!(regexp, '{code:\1}')
+      elsif code_type && !code_type[1].blank?
+        text.gsub!(regexp, '\1{code}')
+      else
+        text.gsub!(regexp, '{code}')
+      end
     end
 
     def migrate_one_code_lines(text)
-      text.gsub!('`', '{noformat}')
       text.gsub!('``', '{noformat}')
+      text.gsub!('`', '{noformat}')
     end
 
     def migrate_user_mentions(text, project_id)
@@ -132,6 +145,10 @@ class SyntaxMigrator
       text.gsub!('- [x]', '(+)')
     end
 
+    def migrate_bullet_lists(text)
+      text.gsub!(/^(\s*)\+\s/, '\1- ')
+    end
+
     def add_attachments(text, attachments)
       attachments.each do |attach|
         text << "\n[^#{attach}]"
@@ -149,18 +166,16 @@ class SyntaxMigrator
       text.lines.each do |line|
         if line.strip.blank?
           if curr_quote.any?
-            curr_quote << line
-          else
-            res << line
+            res << '{quote}'
+            res += curr_quote
+            res << '{quote}'
+            curr_quote = []
           end
-        elsif line.start_with?('> ')
-          curr_quote << line[1..].strip
-        elsif curr_quote.any?
-          res << '{quote}'
-          res += curr_quote
-          res << '{quote}'
           res << line
-          curr_quote = []
+        elsif line.start_with?('>')
+          curr_quote << line[1..]
+        elsif curr_quote.any?
+          curr_quote << line
         else
           res << line
         end
