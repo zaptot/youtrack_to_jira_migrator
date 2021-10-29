@@ -20,7 +20,8 @@ class Project < ApplicationRecord
   include AASM
 
   SUCCESS_STATES = %w[worklogs_synced issues_synced histories_synced].freeze
-  AVAILABLE_STATES = %w[created failed issues_synced worklogs_synced
+  PROCESSING_STATES = %w[processing_worklogs processing_issues processing_histories processing_reset].freeze
+  AVAILABLE_STATES = %w[created failed issues_synced worklogs_synced processing_reset project_reset
                         processing_worklogs processing_issues histories_synced processing_histories].freeze
 
   with_options dependent: :destroy do
@@ -41,6 +42,8 @@ class Project < ApplicationRecord
     state :processing_worklogs
     state :histories_synced
     state :processing_histories
+    state :processing_reset
+    state :project_reset
 
     event :sync_issues do
       transitions from: %i[processing_issues], to: :issues_synced
@@ -63,19 +66,31 @@ class Project < ApplicationRecord
     end
 
     event :start_sync_issues do
-      transitions from: %i[created worklogs_synced issues_synced histories_synced failed], to: :processing_issues
+      transitions from: SUCCESS_STATES + %i[created failed project_reset], to: :processing_issues
     end
 
     event :fail do
-      transitions from: %i[processing_worklogs processing_issues processing_histories created], to: :failed
+      transitions from: PROCESSING_STATES + %i[created], to: :failed
+    end
+
+    event :start_reset_project do
+      transitions from: SUCCESS_STATES + %i[created failed], to: :processing_reset
+    end
+
+    event :reset_project do
+      transitions from: %i[processing_reset], to: :project_reset
     end
   end
 
   def processing?
-    state.in?(%w[processing_worklogs processing_issues processing_histories])
+    PROCESSING_STATES.include?(state)
   end
 
   def can_sync_additional_info?
     SUCCESS_STATES.include?(state)
+  end
+
+  def can_reset_project?
+    (SUCCESS_STATES + %i[created failed]).include?(state)
   end
 end
