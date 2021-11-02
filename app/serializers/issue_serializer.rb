@@ -67,6 +67,8 @@ class IssueSerializer < ActiveModel::Serializer
       Time.at(field['value'] / 1000).strftime('%d/%b/%y')
     when 'PeriodIssueCustomField'
       "PT#{field['value']}M"
+    when 'MultiUserIssueCustomField'
+      field['value'].map { |e| e.gsub(/@.+/, '') }
     else
       field['value']
     end
