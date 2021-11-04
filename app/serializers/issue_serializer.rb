@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class IssueSerializer < ActiveModel::Serializer
-  attributes :description, :reporter, :assignee, :customFieldValues, :status, :key,
+  attributes :description, :reporter, :assignee, :priority, :customFieldValues, :status, :key,
              :resolution, :watchers, :voters, :history, fix_versions: :fixedVersions,
              title: :summary, tags: :labels, number_in_project: :externalId,
              created_at: :created, type: :issueType, estimate: :originalEstimate,
@@ -67,6 +67,8 @@ class IssueSerializer < ActiveModel::Serializer
       Time.at(field['value'] / 1000).strftime('%d/%b/%y')
     when 'PeriodIssueCustomField'
       "PT#{field['value']}M"
+    when 'MultiUserIssueCustomField'
+      field['value'].map { |e| e.gsub(/@.+/, '') }
     else
       field['value']
     end

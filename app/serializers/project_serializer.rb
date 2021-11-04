@@ -10,6 +10,6 @@ class ProjectSerializer < ActiveModel::Serializer
   end
 
   def versions
-    object.issues.system_field_values('Fix versions')
+    (object.issues.system_field_values('Fix versions') + object.issues.system_field_values('Verified in Version')).uniq
   end
 end

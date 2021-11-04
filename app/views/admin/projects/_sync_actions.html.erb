@@ -5,3 +5,7 @@
 <% if resource.state.in?(Project::SUCCESS_STATES) %>
   <%= button_to 'Generate import file', generate_import_admin_project_path(resource), method: :post %>
 <% end %>
+<br>
+<% if resource.can_reset_project? %>
+  <%= button_to "Reset Project", reset_project_admin_project_path(resource), method: :post, data: { confirm: "Are you sure you want to reset this?" } %>
+<% end %>

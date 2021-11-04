@@ -109,4 +109,19 @@ ActiveAdmin.register Project do
       redirect_back(notice: 'File not found!', fallback_location: resource_path(params[:id]))
     end
   end
+
+  member_action :reset_project, method: :post do
+    resource.start_reset_project!
+    dependencies = Project.reflect_on_all_associations(:has_many)
+    Project.transaction do
+      dependencies.each do |dependence|
+        name = dependence.name
+        resource.send(name).destroy_all
+      end
+    end
+    resource.reset_project!
+    redirect_to resource_path(resource)
+  rescue
+    resource.fail!
+  end
 end
