@@ -17,7 +17,7 @@ module Youtrack::Synchronizers
       @data_to_load ||= Youtrack::Scrappers::Histories.scrape(client, project_id)
                           .reject { |history_item| history_item.dig('field', 'name').nil? }
                           .each_with_object(Hash.new { |k, v| k[v] = [] }) do |change, memo|
-        change = Youtrack::Entities::HistoryItem.new(change)
+        change = Youtrack::Entities::HistoryItem.new(change, project_id)
         memo[:changes] << change
         memo[:users] << change.author
       end

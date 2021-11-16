@@ -11,6 +11,7 @@
 #  workflow_name  :string
 #  state          :string
 #  jira_url       :string
+#  status_field   :string           default("State")
 #
 # Indexes
 #
