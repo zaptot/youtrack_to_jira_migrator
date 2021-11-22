@@ -25,7 +25,7 @@
 class Issue < ApplicationRecord
   self.inheritance_column = :_type_disabled
 
-  SYSTEM_CUSTOM_FIELDS = (%w[Assignee Type Estimation State Priority] + ['Spent time', 'Fix versions']).freeze
+  SYSTEM_CUSTOM_FIELDS = (%w[Assignee Type Estimation Priority] + ['Spent time', 'Fix versions']).freeze
 
   with_options required: true do
     belongs_to :jira_user
@@ -89,6 +89,6 @@ class Issue < ApplicationRecord
   end
 
   def status_field
-    @status_field ||= Project.find(project_id).status_field
+    @status_field ||= project.status_field
   end
 end

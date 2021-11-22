@@ -6,8 +6,8 @@ module Youtrack::Entities
 
     JIRA_SYSTEM_FIELDS = %w[fixedVersions issueType originalEstimate description summary status].freeze
 
-    def initialize(attrs, project_id)
-      @project_id = project_id
+    def initialize(attrs, status_field)
+      @status_field = status_field
       @attrs = attrs.with_indifferent_access
     end
 
@@ -50,14 +50,10 @@ module Youtrack::Entities
       when 'Fix versions' then 'fixedVersions'
       when 'Type' then 'issueType'
       when 'Estimate' then 'originalEstimate'
-      when status_field then 'status'
+      when @status_field then 'status'
       else
         field_name.downcase
       end
-    end
-
-    def status_field
-      Project.find(@project_id).status_field
     end
 
     def value_to_string(value)
