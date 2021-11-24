@@ -2,7 +2,7 @@ ActiveAdmin.register Project do
   form partial: 'form'
 
   permit_params do
-    fields = %i[full_name youtrack_token youtrack_url workflow_name jira_url]
+    fields = %i[full_name youtrack_token youtrack_url workflow_name jira_url status_field]
     fields << :id if params[:action].in?(%w[create new])
     fields
   end
@@ -30,6 +30,7 @@ ActiveAdmin.register Project do
       row :needed_states_in_workflow do
         controller.all_available_statuses
       end
+      row :status_field
       row :created_at
       row :updated_at
     end
@@ -60,7 +61,8 @@ ActiveAdmin.register Project do
 
   controller do
     def all_available_statuses
-      states = resource.issues.system_field_values('State')
+      status_field = resource.status_field
+      states = resource.issues.system_field_values(status_field)
       states += IssueHistory.for_project(resource.id)
                             .where(field_name: 'status')
                             .pluck(:from_string, :to_string)

@@ -25,7 +25,7 @@
 class Issue < ApplicationRecord
   self.inheritance_column = :_type_disabled
 
-  SYSTEM_CUSTOM_FIELDS = (%w[Assignee Type Estimation State Priority] + ['Spent time', 'Fix versions']).freeze
+  SYSTEM_CUSTOM_FIELDS = (%w[Assignee Type Estimation Priority] + ['Spent time', 'Fix versions']).freeze
 
   with_options required: true do
     belongs_to :jira_user
@@ -53,7 +53,7 @@ class Issue < ApplicationRecord
   end
 
   def status
-    SyntaxMigrator.normalized_history_values('status', custom_field_by_name('State')&.dig('value'))
+    SyntaxMigrator.normalized_history_values('status', custom_field_by_name(status_field)&.dig('value'))
   end
 
   def fix_versions
@@ -79,12 +79,16 @@ class Issue < ApplicationRecord
   end
 
   def custom_fields_without_system
-    custom_fields.reject { |field| field['field_name'].in?(SYSTEM_CUSTOM_FIELDS) }
+    custom_fields.reject { |field| field['field_name'].in?(SYSTEM_CUSTOM_FIELDS + [status_field]) }
   end
 
   private
 
   def custom_field_by_name(name)
     custom_fields.find { |field| field['field_name'] == name }
+  end
+
+  def status_field
+    @status_field ||= project.status_field
   end
 end
