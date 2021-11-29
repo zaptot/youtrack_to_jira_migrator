@@ -77,8 +77,23 @@ module Youtrack::Entities
     def json_custom_fields
       custom_fields.map do |field|
         custom_field = try(field)
-        { type: custom_field.type, value: custom_field.value, field_name: custom_field.field_name }
+        if custom_field.field_name == 'Type' && subtask_value
+          { type: custom_field.type, value: subtask_value, field_name: custom_field.field_name }
+        else
+          { type: custom_field.type, value: custom_field.value, field_name: custom_field.field_name }
+        end
       end
+    end
+
+    def subtask_value
+      return @subtask_value if defined?(@subtask_value)
+      @subtask_value = nil
+      @links.each { |link| @subtask_value = 'Sub-task' if subtask?(link) }
+      @subtask_value
+    end
+
+    def subtask?(link)
+      link.attrs[:linkType][:name] == 'Subtask' && link.attrs[:direction] == 'INWARD'
     end
 
     def respond_to_missing?(method_name, *args)
