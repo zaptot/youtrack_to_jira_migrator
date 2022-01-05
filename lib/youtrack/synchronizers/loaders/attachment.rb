@@ -9,7 +9,7 @@ module Youtrack::Synchronizers::Loaders::Attachment
 
     data_to_insert = attachments.map do |attachment|
       {
-        comment_id: find_attachment_comment(project_id, attachment, users)&.id,
+        comment_id: find_attachment_comment(attachment, users, issues)&.id,
         issue_id: issues[attachment.issue_number_in_project].id,
         name: attachment.name,
         url: attachment.url,
@@ -24,11 +24,11 @@ module Youtrack::Synchronizers::Loaders::Attachment
     Attachment.insert_all(data_to_insert, unique_by: %i[issue_id name])
   end
 
-  def find_attachment_comment(project, attachment, users)
+  def find_attachment_comment(attachment, users, issues)
     return if attachment.comment.blank?
 
     Comment.find_by(jira_user: users[attachment.comment.author.email],
-                    issue: issues(project)[attachment.issue_number_in_project],
+                    issue: issues[attachment.issue_number_in_project],
                     body: attachment.comment.body,
                     created_at: attachment.comment.created_at)
   end
