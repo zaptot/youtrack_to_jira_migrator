@@ -14,10 +14,9 @@ module Youtrack::Synchronizers::Loaders::Link
         next unless issues(issues, issue_to.project_id)[issue_to.id].present?
 
         issue_from, issue_to = calculate_issues_order(link, issue_to, link.parent_issue_id, project_id)
-        issue_from, issue_to = issue_to, issue_from if link.type == 'Subtask'
 
         data_to_insert << {
-          type: link_type(link),
+          type: link.type,
           issue_from_id: issues(issues, issue_from.project_id)[issue_from.id].id,
           issue_to_id: issues(issues, issue_to.project_id)[issue_to.id].id,
           created_at: Time.now,
@@ -46,9 +45,5 @@ module Youtrack::Synchronizers::Loaders::Link
     else
       [issue_to, Issue.new(id: parent_issue_id, project_id: parent_project_id)].sort_by(&:id)
     end
-  end
-
-  def link_type(link)
-    link.type == 'Subtask' ? 'sub-task-link' : link.type
   end
 end
