@@ -66,8 +66,8 @@ class SyntaxMigrator
     end
 
     def migrate_one_code_lines(text)
-      text.gsub!(/``(.+?)``/, '{{\1}}')
-      text.gsub!(/`(.+?)`/, '{{\1}}')
+      text.gsub!(/``.+?``/m) { |code| code.gsub(/\s+/, ' ').gsub(/``(.+)``/, '{{\1}}') }
+      text.gsub!(/`.+?`/m) { |code| code.gsub(/\s+/, ' ').gsub(/`(.+)`/, '{{\1}}') }
     end
 
     def migrate_user_mentions(text, project_id)
