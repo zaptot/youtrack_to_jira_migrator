@@ -116,7 +116,7 @@ class SyntaxMigrator
     end
 
     def migrate_named_urls(text)
-      urls_with_names = text.scan(%r{\[(\S+?)\]\((\S+?)\)}).to_a.compact.uniq
+      urls_with_names = text.scan(%r{\[(\S[\S ]+?)\]\((\S+?)\)}).to_a.compact.uniq
 
       urls_with_names.each do |name, url|
         old_url = "[#{name}](#{url})"
