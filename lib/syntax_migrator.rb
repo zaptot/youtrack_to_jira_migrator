@@ -8,6 +8,7 @@ class SyntaxMigrator
 
     def migrate_text_to_jira_syntax(text, project, attachments_names = [])
       text = text.to_s
+      migrate_brackets(text)
       migrate_code_blocks(text)
       migrate_one_code_lines(text)
       migrate_user_mentions(text, project.id)
@@ -68,6 +69,10 @@ class SyntaxMigrator
     def migrate_one_code_lines(text)
       text.gsub!(/``.+?``/m) { |code| code.gsub(/\s+/, ' ').gsub(/``\s*(\S?.*\S)\s*``/, '{{\1}}') }
       text.gsub!(/`.+?`/m) { |code| code.gsub(/\s+/, ' ').gsub(/`\s*(\S?.*\S)\s*`/, '{{\1}}') }
+    end
+
+    def migrate_brackets(text)
+      text.gsub!(/\{(.*?)\}/, ':\1')
     end
 
     def migrate_user_mentions(text, project_id)
