@@ -54,7 +54,7 @@ class SyntaxMigrator
     end
 
     def migrate_code_blocks(text)
-      regexp = /^```[ \f\r\t\v]*(\S*).*$/
+      regexp = /^\s*```[ \f\r\t\v]*(\S*).*$/
       code_type = text.match(regexp)
       if code_type && code_type[1].in?(VALID_CODE_TYPES)
         text.gsub!(regexp, '{code:\1}')
@@ -66,8 +66,8 @@ class SyntaxMigrator
     end
 
     def migrate_one_code_lines(text)
-      text.gsub!('``', '{noformat}')
-      text.gsub!('`', '{noformat}')
+      text.gsub!(/``.+?``/m) { |code| code.gsub(/\s+/, ' ').gsub(/``\s*(\S?.*\S)\s*``/, '{{\1}}') }
+      text.gsub!(/`.+?`/m) { |code| code.gsub(/\s+/, ' ').gsub(/`\s*(\S?.*\S)\s*`/, '{{\1}}') }
     end
 
     def migrate_user_mentions(text, project_id)
