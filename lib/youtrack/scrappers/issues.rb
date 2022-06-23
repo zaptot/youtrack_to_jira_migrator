@@ -17,7 +17,7 @@ module Youtrack::Scrappers
         watchers(issueWatchers(user(email,login)))
         attachments(name,url,draft,removed,issue(numberInProject),comment(author(email,login),text,created))
         links(linkType(name),issues(numberInProject,project(shortName)),direction)
-        customFields(name,fieldType,value(name,minutes,login,email))
+        customFields(name,fieldType,value(name,minutes,login,email,text))
         comments(text,author(email,login),deleted,created,issue(numberInProject))
       ].join(',')
     }.freeze
