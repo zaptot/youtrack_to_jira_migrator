@@ -19,7 +19,8 @@ class IssueSerializer < ActiveModel::Serializer
     'SingleVersionIssueCustomField' => 'com.atlassian.jira.plugin.system.customfieldtypes:version',
     'DateIssueCustomField' => 'com.atlassian.jira.plugin.system.customfieldtypes:datepicker',
     'MultiUserIssueCustomField' => 'com.atlassian.jira.plugin.system.customfieldtypes:multiuserpicker',
-    'SingleOwnedIssueCustomField' => 'com.atlassian.jira.plugin.system.customfieldtypes:select'
+    'SingleOwnedIssueCustomField' => 'com.atlassian.jira.plugin.system.customfieldtypes:select',
+    'TextIssueCustomField' => 'com.atlassian.jira.plugin.system.customfieldtypes:textarea'
   }.freeze
   DEFAULT_JIRA_TYPE = 'com.atlassian.jira.plugin.system.customfieldtypes:textfield'
 
