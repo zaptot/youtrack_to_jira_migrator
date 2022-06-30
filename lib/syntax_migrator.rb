@@ -22,6 +22,7 @@ class SyntaxMigrator
       migrate_tables(text)
       migrate_check_lists(text)
       migrate_bullet_lists(text)
+      migrate_markdown_urls(text)
       _text = migrate_quotes(text)
     end
 
@@ -73,6 +74,10 @@ class SyntaxMigrator
 
     def migrate_brackets(text)
       text.gsub!(/\{(.*?)\}/, ':\1')
+    end
+
+    def migrate_markdown_urls(text)
+      text.gsub!(/<(http.*)>/, '\1') # '<http.../url>' -> 'http.../url'
     end
 
     def migrate_user_mentions(text, project_id)
