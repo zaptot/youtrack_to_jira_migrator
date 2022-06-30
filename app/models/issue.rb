@@ -49,7 +49,7 @@ class Issue < ApplicationRecord
   end
 
   def assignee
-    custom_field_by_name('Assignee')&.dig('value').gsub(/@.+/, '')
+    custom_field_by_name('Assignee')&.dig('value')&.gsub(/@.+/, '')
   end
 
   def status
