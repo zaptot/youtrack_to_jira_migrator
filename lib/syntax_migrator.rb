@@ -78,6 +78,7 @@ class SyntaxMigrator
 
     def migrate_markdown_urls(text)
       text.scan(/<(http[^\s]+)>/).each do |url|
+        url = url.first
         text.gsub!("<#{url}>", url) # '<http.../url>' -> 'http.../url'
       end
     end
