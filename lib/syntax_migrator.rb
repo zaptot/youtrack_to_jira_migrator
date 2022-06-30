@@ -112,7 +112,7 @@ class SyntaxMigrator
     def migrate_youtrack_urls(text, project)
       url_base = project.youtrack_url
       jira_url = project.jira_url
-      urls_to_replace = text.scan(%r{(#{url_base})(\S*)}).to_a.compact.uniq
+      urls_to_replace = text.scan(%r{(#{url_base})([^\s>]*)}).to_a.compact.uniq
       issue_id_from_url = ->(url) { url[%r{[=/]([a-zA-Z]+-\d+)$}, 1] || url[%r{\?issue=([a-zA-Z]+-\d+)}, 1] }
 
       urls_to_replace.each do |url_base, url_path|
