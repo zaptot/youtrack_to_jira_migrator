@@ -70,6 +70,8 @@ class IssueSerializer < ActiveModel::Serializer
       "PT#{field['value']}M"
     when 'MultiUserIssueCustomField'
       field['value'].map { |e| e.gsub(/@.+/, '') }
+    when 'TextIssueCustomField'
+      SyntaxMigrator.migrate_text_to_jira_syntax(field['value'], object.project)
     else
       field['value']
     end
